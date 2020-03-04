@@ -16,4 +16,6 @@ db = SQLAlchemy(app)
 #manager = Manager(app)
 #manager.add_command('db', MigrateCommand)
 
+
+#imported after declaring so attributes has chance to be created first
 from app import routes, models
