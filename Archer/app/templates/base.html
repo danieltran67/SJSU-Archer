@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Study Buddy</title>
+        <title>Archer</title>
     </head>
     <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,600' rel='stylesheet'>
 
@@ -19,7 +19,7 @@
 
     <body>
         <div class="container">
-         <h1 id="main_title">Study Buddy</h1>
+         <h1 id="main_title">Archer</h1>
          <div class="btn-group">
             <a href="{{ url_for('index') }}" button type="button" class="btn btn-primary">Home</a>
             <a href="{{ url_for('about') }}"button type="button" class="btn btn-primary">About</a>
@@ -34,13 +34,6 @@
         </div>
         </div>
         <hr>
-        {% with messages = get_flashed_messages() %}
-        {% if messages %}
-        <ul>
-            {% for message in messages %}
-            <li>{{ message }}</li>
-            {% endfor %}
-        </ul>
         {% endif %}
         {% endwith %}
         {% block content %}{% endblock %}
