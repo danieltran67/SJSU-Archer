@@ -22,6 +22,9 @@ class User(UserMixin, db.Model):
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
 
+
+def init_db():
+    db.create_all()
 # create database. In case needed to remake database, delete current archer.db
 # and run code below
 
