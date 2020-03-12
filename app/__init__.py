@@ -26,4 +26,4 @@ login_manager.login_message_category = 'info'
 
 
 #imported after declaring so attributes has chance to be created first
-from app import routes, models
+from app import routes, models, form
