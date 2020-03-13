@@ -1,0 +1,20 @@
+<title>SJSU Archer</title>
+    <link rel="stylesheet"
+      href="{{url_for('.static', filename='signin.css')}}">
+<link href="{{ url_for("static", filename='css/styles1.css')}}" type="text/css" rel="stylesheet"/>
+<div class=page>
+  <h1>Archer</h1>
+  <div class=metanav>
+  {% if not session.logged_in %}
+    <a href = "{{ url_for('login') }}">Login</a>
+    <a href = "{{ url_for('signup') }}">Register</a>
+    <a href = "{{ url_for('logout') }}">Logout</a>
+  {% else %}
+    <a href="{{ url_for('logout') }}">Log Out</a>
+  {% endif %}
+  </div>
+  {% for message in get_flashed_messages() %}
+    <div class=flash>{{ message }}</div>
+  {% endfor %}
+  {% block content %}{% endblock %}
+</div>
