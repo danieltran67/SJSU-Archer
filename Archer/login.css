@@ -1,13 +1,13 @@
 
 .btn-block { width: 100%; display:block; }
 .btn-block {padding: 10px 16px}
-.btn-primary {background-color: #e5ffe3}
+.btn-primary {background-color: orange}
 
 body {
     width: 100%;
     height:100%;
     font-family: 'Arial', Arial;
-    background: #121f2e;
+    background: #180E05;
 }
 .login {
     position: absolute;
@@ -17,7 +17,7 @@ body {
     width:330px;
     height:330px;
 }
-.login h2 { color: #BCD7BF;
+.login h2 { color: orange;
             text-shadow: 0 0 10px rgba(0,0,0,0.3);
             letter-spacing:1px;
             text-align:center;
@@ -30,7 +30,7 @@ input {
 
     padding: 11px;
     font-size: 14px;
-    color: #BCD7BF;
+    color: orange;
     text-shadow: 2px 2px 2px rgba(0,0,0,0.9);
     border: 1px solid rgba(0,0,0,0.9);
     border-radius: 7px;
