@@ -1,0 +1,59 @@
+{% extends "bootstrap/base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+{% block title %}
+    {{ title }}
+{% endblock %}
+{% block content %}
+<!--NAVBAR CODE-->
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand">Archer</a>
+        </div>
+        <div id="navbar" class="collapse navbar-collapse">
+          <ul class="nav navbar-nav navbar-font">
+            <li><a href="{{ url_for('homePage') }}">Home</a></li>
+            {% if current_user.is_anonymous %}
+              <li><a href="{{ url_for('login') }}">Login</a></li>
+            <li><a href="{{ url_for('signup') }}">Sign Up</a></li>
+            <li><a href="{{ url_for('about') }}">About Us</a></li>
+            <li><a href="{{ url_for('contact') }}">Contact</a></li>
+            {% else %}
+              <li><a href="{{ url_for('user', username = current_user.username) }}">Profile</a></li>
+              <li><a href="{{ url_for('about') }}">About Us</a></li>
+              <li><a href="{{ url_for('contact') }}">Contact</a></li>
+              <li><a href="{{ url_for('logout') }}">Logout</a></li>
+            {% endif %}
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <!--NAVBAR CODE-->
+    <br><br><br><br><br><br><br>
+   <!--ABOUT US CODE-->
+    <div class="alert alert-success" role="alert">
+  <h4 class="alert-heading">About Us!</h4>
+  <p>Archer is an website that will help you make friends
+        based on common intrests. Archer is devloped by John Hoang,
+        Gurvin Kohli, Daniel Tran, and Edgar Yu. All four of us have
+        always believed that making friends is a vital part of a
+        students academic success. Hence Archer will help everyone at
+        San Jose State University to make friends but most importantly
+        Archer will help freshmen make friends.
+  </p>
+  <hr>
+  <p class="mb-0">Remember, shoot your shot!</p>
+    </div>
+<!--ABOUT US CODE-->
+{% endblock %}
+
+{% block scripts %}
+    {{ super() }}
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.7/angular.min.js"></script>
+{% endblock %}
