@@ -31,69 +31,38 @@
     <br><br><br><br><br><br><br>
    <!--MAJOR SURVEY CODE-->
     <h1>Current Major</h1>
-    <div class="form-check">
-  <input class="form-check-input" type="radio" name="Computer Engineering" id="CMPE" value="major1" checked>
-  <label class="form-check-label" for="major1">
-    Computer Engineering
-  </label>
-</div>
-<div class="form-check">
-  <input class="form-check-input" type="radio" name="Computer Science" id="CS" value="major2">
-  <label class="form-check-label" for="major2">
-    Computer Science
-  </label>
-</div>
-<div class="form-check">
-  <input class="form-check-input" type="radio" name="Software Engineering" id="SE" value="major3" disabled>
-  <label class="form-check-label" for="major3">
-    Software Engineering
-  </label>
-</div>
+      <select name='takeAction'>
+        <option class='head'>Select your major</option>
+        <option value='CMPE'>Computer Engineering</option>
+        <option value='CS'>Computer Science</option>
+        <option value='SE'>Software Engineering</option>
+      </select>
     <!--MAJOR SURVEY CODE-->
 
 <!-- OUTDOOR-INTEREST SURVEY CODE-->
     <h1>Outdoor Interests</h1>
-    <div class="form-check">
-  <input class="form-check-input" type="radio" name="Concerts" id="concerts" value="outdoor1" checked>
-  <label class="form-check-label" for="outdoor1">
-    Concerts
-  </label>
-</div>
-<div class="form-check">
-  <input class="form-check-input" type="radio" name="Exercising" id="gym" value="outdoor2">
-  <label class="form-check-label" for="outdoor2">
-    Exercising
-  </label>
-</div>
-<div class="form-check">
-  <input class="form-check-input" type="radio" name="Eating Out" id="eat" value="outdoor3" disabled>
-  <label class="form-check-label" for="outdoor3">
-    Eating Out
-  </label>
-</div>
+    <div class="form-group">
+    <label for="outInterests">Outdoor Interests</label>
+    <select multiple class="form-control" id="outInterests">
+      <option>Concerts</option>
+      <option>Exercising</option>
+      <option>Eating out</option>
+    </select>
+  </div>
 <!-- OUTDOOR-INTEREST CODE-->
 
 
     <!-- INDOOR-INTEREST SURVEY CODE-->
     <h1>Indoor Interests</h1>
-    <div class="form-check">
-  <input class="form-check-input" type="radio" name="games" id="concerts" value="indoor1" checked>
-  <label class="form-check-label" for="indoor1">
-    Video Gmes
-  </label>
-</div>
-<div class="form-check">
-  <input class="form-check-input" type="radio" name="Exercising" id="gym" value="outdoor2">
-  <label class="form-check-label" for="outdoor2">
-    Exercising
-  </label>
-</div>
-<div class="form-check">
-  <input class="form-check-input" type="radio" name="Eating Out" id="eat" value="outdoor3" disabled>
-  <label class="form-check-label" for="outdoor3">
-    Eating Out
-  </label>
-</div>
+    <div class="form-group">
+    <label for="exampleFormControlSelect2">Example multiple select</label>
+    <select multiple class="form-control" id="exampleFormControlSelect2">
+      <option>Video Games</option>
+      <option>Studying</option>
+      <option>Cooking</option>
+      <option>Music</option>
+    </select>
+  </div>
 <!-- INDOOR-INTEREST CODE-->
 
 {% endblock %}
