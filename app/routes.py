@@ -2,8 +2,8 @@ from flask import render_template, flash, redirect, url_for, request
 from flask_login import login_user, login_required, logout_user
 from werkzeug.security import generate_password_hash
 from app import db, app
-from app.form import LoginForm, RegisterForm
-from app.models import User
+from app.form import LoginForm, RegisterForm, SurveyForm
+from app.models import User, Survey
 
 db.create_all()
 
@@ -45,14 +45,22 @@ def signup():
         new_user = User(username=form.username.data, email=form.email.data, password=form.password.data)
         db.session.add(new_user)
         db.session.commit()
-
         return redirect(url_for('login'))
+    else:
+        flash('Already taken. Try again.')
     return render_template('signUp_Bootstrap.html', form=form, title="Register")
 
 
 @app.route('/survey', methods=['GET', 'POST'])
 def survey():
-    return render_template('surveyBootstrap.html')
+    form = SurveyForm()
+
+    if form.validate_on_submit():
+        option = Survey(major=form.major.data, outdoor=form.outdoor.data, indoor=form.indoor.data)
+        db.session.add(option)
+        db.session.commit()
+        return redirect(url_for('about'))
+    return render_template('surveyBootstrap.html', form=form, title="Survey")
 
 
 @app.route('/about', methods=['GET', 'POST'])
