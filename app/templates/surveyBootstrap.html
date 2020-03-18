@@ -1,0 +1,104 @@
+{% extends "bootstrap/base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+{% block title %}
+    {{ title }}
+{% endblock %}
+{% block content %}
+<!--NAVBAR CODE-->
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand">Archer</a>
+        </div>
+        <div id="navbar" class="collapse navbar-collapse">
+          <ul class="nav navbar-nav navbar-font">
+            <li><a href="{{ url_for('homePage') }}">Home</a></li>
+              <li><a href="{{ url_for('login') }}">Login</a></li>
+            <li><a href="{{ url_for('signup') }}">Sign Up</a></li>
+              <li><a href="{{ url_for('about') }}">About Us</a></li>
+              <li><a href="{{ url_for('contact') }}">Contact</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <!--NAVBAR CODE-->
+    <br><br><br><br><br><br><br>
+   <!--MAJOR SURVEY CODE-->
+    <h1>Current Major</h1>
+    <div class="form-check">
+  <input class="form-check-input" type="radio" name="Computer Engineering" id="CMPE" value="major1" checked>
+  <label class="form-check-label" for="major1">
+    Computer Engineering
+  </label>
+</div>
+<div class="form-check">
+  <input class="form-check-input" type="radio" name="Computer Science" id="CS" value="major2">
+  <label class="form-check-label" for="major2">
+    Computer Science
+  </label>
+</div>
+<div class="form-check">
+  <input class="form-check-input" type="radio" name="Software Engineering" id="SE" value="major3" disabled>
+  <label class="form-check-label" for="major3">
+    Software Engineering
+  </label>
+</div>
+    <!--MAJOR SURVEY CODE-->
+
+<!-- OUTDOOR-INTEREST SURVEY CODE-->
+    <h1>Outdoor Interests</h1>
+    <div class="form-check">
+  <input class="form-check-input" type="radio" name="Concerts" id="concerts" value="outdoor1" checked>
+  <label class="form-check-label" for="outdoor1">
+    Concerts
+  </label>
+</div>
+<div class="form-check">
+  <input class="form-check-input" type="radio" name="Exercising" id="gym" value="outdoor2">
+  <label class="form-check-label" for="outdoor2">
+    Exercising
+  </label>
+</div>
+<div class="form-check">
+  <input class="form-check-input" type="radio" name="Eating Out" id="eat" value="outdoor3" disabled>
+  <label class="form-check-label" for="outdoor3">
+    Eating Out
+  </label>
+</div>
+<!-- OUTDOOR-INTEREST CODE-->
+
+
+    <!-- INDOOR-INTEREST SURVEY CODE-->
+    <h1>Indoor Interests</h1>
+    <div class="form-check">
+  <input class="form-check-input" type="radio" name="games" id="concerts" value="indoor1" checked>
+  <label class="form-check-label" for="indoor1">
+    Video Gmes
+  </label>
+</div>
+<div class="form-check">
+  <input class="form-check-input" type="radio" name="Exercising" id="gym" value="outdoor2">
+  <label class="form-check-label" for="outdoor2">
+    Exercising
+  </label>
+</div>
+<div class="form-check">
+  <input class="form-check-input" type="radio" name="Eating Out" id="eat" value="outdoor3" disabled>
+  <label class="form-check-label" for="outdoor3">
+    Eating Out
+  </label>
+</div>
+<!-- INDOOR-INTEREST CODE-->
+
+{% endblock %}
+
+{% block scripts %}
+    {{ super() }}
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.7/angular.min.js"></script>
+{% endblock %}
