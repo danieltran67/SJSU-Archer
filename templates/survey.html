@@ -1,15 +1,13 @@
-<html>
-<head>
-<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-<link href="{{ url_for("static", filename='css/styles1.css')}}" type="text/css" rel="stylesheet"/>
-</head>
-<body>
+{% extends "bootstrap/wtf.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+{% block body %}
+    {% if error %}<p class=error><strong>Error:</strong> {{ error }}{% endif %}
 <div id="wrapper">
 
 <div class="form_div">
 <p class="form_label">SURVEY</p>
 <form>
-</div>
+</form>
 <br>
 <form>
   <p class = "form_label">MAJOR</p>
@@ -42,5 +40,4 @@
 </div>
 </form>
 </div>
-</body>
-</html>
+{% endblock %}

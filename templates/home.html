@@ -1,7 +1,7 @@
-{% extends "bootstrap/wtf.html" %}
+{% extends "bootstrap/base.html" %}
 
 {% block content %}
-    <!--NAVBAR CODE-->
+<!--NAVBAR CODE-->
     <nav class="navbar navbar-inverse navbar-fixed-top">
       <div class="container">
         <div class="navbar-header">
@@ -16,33 +16,16 @@
         <div id="navbar" class="collapse navbar-collapse">
           <ul class="nav navbar-nav navbar-font">
             <li><a href="{{ url_for('homePage') }}">Home</a></li>
+              <li><a href="{{ url_for('login') }}">Login</a></li>
             <li><a href="{{ url_for('signup') }}">Sign Up</a></li>
+              <li><a href="{{ url_for('about') }}">About Us</a></li>
+              <li><a href="{{ url_for('contact') }}">Contact</a></li>
           </ul>
         </div>
       </div>
     </nav>
     <!--NAVBAR CODE-->
 
-    <!--LOGIN CODE-->
-  <form action="{{ url_for('login') }}" method=post>
-    <<div id="wrapper">
-
-<div class="form_div">
-<p class="form_label">LOGIN</p>
-    <form method="post" action="">
-       {{ form.hidden_tag() }}
-        {{ wtf.form_field(form.username) }}
-        {{ wtf.form_field(form.password) }}
-        {{ wtf.form_field(form.remember) }}
-        <p><input type="submit" value="LOGIN"></p>
-    </form>
-</div>
-    <!--LOGIN CODE END-->
-<br>
-<br>
-<br>
-</div>
-  </form>
 {% endblock %}
 
 {% block scripts %}
