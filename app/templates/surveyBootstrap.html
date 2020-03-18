@@ -23,50 +23,28 @@
             <li><a href="{{ url_for('signup') }}">Sign Up</a></li>
               <li><a href="{{ url_for('about') }}">About Us</a></li>
               <li><a href="{{ url_for('contact') }}">Contact</a></li>
+              <li><a href="{{ url_for('logout') }}">Log Out</a></li>
           </ul>
         </div>
       </div>
     </nav>
     <!--NAVBAR CODE-->
     <br><br><br><br><br><br><br>
-   <!--MAJOR SURVEY CODE-->
-    <h1>Current Major</h1>
-      <select name='takeAction'>
-        <option class='head'>Select your major</option>
-        <option value='CMPE'>Computer Engineering</option>
-        <option value='CS'>Computer Science</option>
-        <option value='SE'>Software Engineering</option>
-      </select>
-    <!--MAJOR SURVEY CODE-->
 
-<!-- OUTDOOR-INTEREST SURVEY CODE-->
-    <h1>Outdoor Interests</h1>
-    <div class="form-group">
-    <select multiple class="form-control" id="outInterests">
-      <option>Concerts</option>
-      <option>Exercising</option>
-      <option>Eating out</option>
-    </select>
-  </div>
-<!-- OUTDOOR-INTEREST CODE-->
-
-
-    <!-- INDOOR-INTEREST SURVEY CODE-->
-    <h1>Indoor Interests</h1>
-    <div class="form-group">
-    <select multiple class="form-control" id="exampleFormControlSelect2">
-      <option>Video Games</option>
-      <option>Studying</option>
-      <option>Cooking</option>
-      <option>Music</option>
-    </select>
-  </div>
-<!-- INDOOR-INTEREST CODE-->
-
-<!-- SUBMIT BUTTON CODE-->
-<p><input type="submit" value= "SUBMIT"></p>
-<!-- SUBMIT BUTTON CODE-->
-
+<!--SURVEY CODE-->
+    <br><br><br><br><br><br>
+    <div class="container">
+    <form method="POST" action="{{ url_for('survey') }}">
+        <d1>
+            {{ form.hidden_tag() }}
+            {{ wtf.form_field(form.major) }}
+            {{ wtf.form_field(form.outdoor) }}
+            {{ wtf.form_field(form.indoor) }}
+            <input type="submit" value="Select">
+        </d1>
+    </form>
+    </div>
+    <!--DATABASE CODE-->
 {% endblock %}
 
 {% block scripts %}
