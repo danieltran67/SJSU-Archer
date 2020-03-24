@@ -15,8 +15,8 @@ from app import db, app, login_manager, form  # imported from init__
 import secrets
 import os
 from werkzeug.urls import url_parse
-from app.form import LoginForm, RegisterForm
-from app.models import User
+from app.form import LoginForm, RegisterForm, SurveyForm, SurveyUpdateForm
+from app.models import User, Survey
 
 
 #db.create_all()
@@ -49,7 +49,7 @@ def login():
             if form.password.data == user.password:
                 login_user(user, remember=form.remember.data)
                 flash('You were logged in')
-                return redirect(url_for('homePage'))
+                return redirect(url_for('survey'))
         flash('Incorrect username/password. Try again.')
     return render_template('login_Bootstrap.html', form=form, title="Login")
 
@@ -67,8 +67,38 @@ def signup():
 
 
 @app.route('/survey', methods=['GET', 'POST'])
+@login_required
 def survey():
-    return render_template('surveyBootstrap.html')
+    form = SurveyForm()
+    if form.validate_on_submit():
+        option = Survey(major = form.major.data, outdoor = form.outdoor.data, indoor = form.indoor.data, user_id = current_user.id)
+        db.session.add(option)
+        db.session.commit()
+        return redirect(url_for('user', username = current_user.username))
+
+    return render_template('surveyBootstrap.html', form=form, title="Survey")
+
+''' Changing survey needs to be worked on. it wont update'''
+@app.route('/survey/updates', methods=['GET', 'POST'])
+@login_required
+def surveyUpdate():
+    person = User.query.filter_by(username=current_user.username).first()
+    userMajor = person.optionSurvey[0].major
+    userOutdoor = person.optionSurvey[0].outdoor
+    userIndoor = person.optionSurvey[0].indoor
+    form = SurveyUpdateForm()
+    if form.validate_on_submit():
+        if form.major.data:
+            userMajor=form.major.data
+        if form.outdoor.data:
+            userOutdoor=form.outdoor.data
+        if form.indoor.data:
+            userIndoor=form.indoor.data
+        Survey(major = form.major.data, outdoor = form.outdoor.data, indoor = form.indoor.data, user_id = current_user.id)
+        db.session.commit()
+        flash("Activities Updated!")
+        return redirect(url_for('user', username=current_user.username))
+    return render_template('updateSurveyBootstrap.html', form = form, title ="Update Activities")
 
 
 @app.route('/about', methods=['GET', 'POST'])
@@ -84,7 +114,15 @@ def contact():
 @login_required
 def user(username):
     user = User.query.filter_by(username = username).first_or_404()
-    return render_template('profile_Bootstrap.html')
+    person = User.query.filter_by(username=current_user.username).first()
+    userMajor = person.optionSurvey[0].major
+    userOutdoor = person.optionSurvey[0].outdoor
+    userIndoor = person.optionSurvey[0].indoor
+    #userMajor = Survey.query.filter_by(major=major).first()
+    #userOutdoor = Survey.query.filter_by(outdoor=outdoor).first()
+    #userIndoor = survey.query.filter_by(indoor=indoor).first()
+
+    return render_template('profile_Bootstrap.html', userMajor=userMajor, userOutdoor=userOutdoor, userIndoor=userIndoor)
 
 
 @app.route('/logout')

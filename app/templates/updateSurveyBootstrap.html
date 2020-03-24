@@ -1,10 +1,8 @@
-{% extends 'bootstrap/base.html' %}
+{% extends "bootstrap/base.html" %}
 {% import "bootstrap/wtf.html" as wtf %}
 {% block title %}
-  {{title}}
+    {{ title }}
 {% endblock %}
-
-
 {% block content %}
 <!--NAVBAR CODE-->
     <nav class="navbar navbar-inverse navbar-fixed-top">
@@ -27,7 +25,7 @@
             <li><a href="{{ url_for('about') }}">About Us</a></li>
             <li><a href="{{ url_for('contact') }}">Contact</a></li>
             {% else %}
-            <li><a href="{{ url_for('user', username = current_user.username) }}">Profile</a></li>
+              <li><a href="{{ url_for('user', username = current_user.username) }}">Profile</a></li>
               <li><a href="{{ url_for('about') }}">About Us</a></li>
               <li><a href="{{ url_for('contact') }}">Contact</a></li>
               <li><a href="{{ url_for('logout') }}">Logout</a></li>
@@ -37,17 +35,25 @@
       </div>
     </nav>
     <!--NAVBAR CODE-->
-    <br><br><br><br><br><br>
-<h1>{{ current_user.username }} </h1>
-  <a href="{{ url_for('surveyUpdate')}}">Edit your major or interests</a>
-  <div class = "major">
-    <h1>Major</h1>
-    {{ userMajor }}
-  </div>
-  <div class="Interests">
-    <h1>Interests</h1>
-    <p>{{ userOutdoor }}</p>
-    <p>{{ userIndoor }}</p>
+    <br><br><br><br><br><br><br>
 
-  </div>
-{% endblock %}
+    <!--SURVEY CODE-->
+        <br><br><br><br><br><br>
+        <div class="update_container">
+        <form method="POST" action="">
+            <d1>
+                {{ form.hidden_tag() }}
+                {{ wtf.form_field(form.major) }}
+                {{ wtf.form_field(form.outdoor) }}
+                {{ wtf.form_field(form.indoor) }}
+                <input type="submit" value="Select">
+            </d1>
+        </form>
+        </div>
+        <!--DATABASE CODE-->
+    {% endblock %}
+
+    {% block scripts %}
+        {{ super() }}
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.7/angular.min.js"></script>
+    {% endblock %}
