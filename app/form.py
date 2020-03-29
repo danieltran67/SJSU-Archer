@@ -30,29 +30,29 @@ class RegisterForm(FlaskForm):
             raise ValidationError('Email taken. Please use a different email.')
 
 class SurveyForm(FlaskForm):
-    major = SelectField(u'Major', choices=[('cmpe', 'Computer Engineering'),
-                                           ('cs', "Computer Science"),
-                                           ('se', 'Software Engineering')])
-    outdoor = SelectField(u'Outdoor Activities', choices=[('rave', 'Concerts'),
-                                           ('eat', "Going Out to Eat"),
-                                           ('gym', 'Gym'),
-                                           ('sports', 'Sports')])
-    indoor = SelectField(u'Indoor Activities', choices=[('game', 'Video Games'),
-                                           ('books', "Reading"),
-                                           ('music', 'Playing Music')])
+    major = SelectField(u'Major', choices=[('Computer Engineering', 'Computer Engineering'),
+                                           ('Computer Science', "Computer Science"),
+                                           ('Software Engineering', 'Software Engineering')])
+    outdoor = SelectField(u'Outdoor Activities', choices=[('Concerts', 'Concerts'),
+                                           ('Going out to eat', "Going out to eat"),
+                                           ('Gym', 'Gym'),
+                                           ('Sports', 'Sports')])
+    indoor = SelectField(u'Indoor Activities', choices=[('Video games', 'Video games'),
+                                           ('Reading', "Reading"),
+                                           ('Music', 'Music')])
 
 
 class SurveyUpdateForm(FlaskForm):
-    major = SelectField(u'Major', choices=[('cmpe', 'Computer Engineering'),
-                                           ('cs', "Computer Science"),
-                                           ('se', 'Software Engineering')])
-    outdoor = SelectField(u'Outdoor Activities', choices=[('rave', 'Concerts'),
-                                           ('eat', "Going Out to Eat"),
-                                           ('gym', 'Gym'),
-                                           ('sports', 'Sports')])
-    indoor = SelectField(u'Indoor Activities', choices=[('game', 'Video Games'),
-                                           ('books', "Reading"),
-                                           ('music', 'Playing Music')])
+    major = SelectField(u'Major', choices=[('Computer Engineering', 'Computer Engineering'),
+                                           ('Computer Science', "Computer Science"),
+                                           ('Software Engineering', 'Software Engineering')])
+    outdoor = SelectField(u'Outdoor Activities', choices=[('Concerts', 'Concerts'),
+                                           ('Going out to eat', "Going out to eat"),
+                                           ('Gym', 'Gym'),
+                                           ('Sports', 'Sports')])
+    indoor = SelectField(u'Indoor Activities', choices=[('Video games', 'Video games'),
+                                           ('Reading', "Reading"),
+                                           ('Music', 'Music')])
 '''
     def __init__(self, oldData, *arg, **kwargs):
         super(SurveyUpdateForm, self).__init__(*arg, **kwargs)

@@ -125,6 +125,12 @@ def user(username):
     return render_template('profile_Bootstrap.html', userMajor=userMajor, userOutdoor=userOutdoor, userIndoor=userIndoor)
 
 
+@app.route('/profile/matches')
+@login_required
+def matches():
+    return render_template('matches_Bootstrap.html', title = "Your Matches:")
+
+
 @app.route('/logout')
 @login_required
 def logout():

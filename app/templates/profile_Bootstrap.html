@@ -39,7 +39,7 @@
     <!--NAVBAR CODE-->
     <br><br><br><br><br><br>
 <h1>{{ current_user.username }} </h1>
-  <a href="{{ url_for('surveyUpdate')}}">Edit your major or interests</a>
+  <a href="{{ url_for('surveyUpdate')}}" class="btn btn-primary btn-lg active" role="button" aria-pressed="true">Edit your major or interests</a>
   <div class = "major">
     <h1>Major</h1>
     {{ userMajor }}
@@ -48,6 +48,6 @@
     <h1>Interests</h1>
     <p>{{ userOutdoor }}</p>
     <p>{{ userIndoor }}</p>
-
+  <a href="{{url_for('matches')}}" class="btn btn-success btn-lg active" role="button" aria-pressed="true">Match me!</a>
   </div>
 {% endblock %}
