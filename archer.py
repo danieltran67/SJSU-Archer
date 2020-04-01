@@ -12,7 +12,7 @@ python .\archer.py db upgrade
 
 
 #if __name__ =='__main__':
- #  manager.run()
+#    manager.run()
 
 
 """This file runs the website. We separated it so no one touches it."""

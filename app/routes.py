@@ -41,7 +41,6 @@ def homePage():
 def login():
     if current_user.is_authenticated:
         return redirect(url_for('user', username=current_user.username))
-
     form = LoginForm()
     if form.validate_on_submit():
         user = User.query.filter_by(username=form.username.data).first()
@@ -49,7 +48,10 @@ def login():
             if form.password.data == user.password:
                 login_user(user, remember=form.remember.data)
                 flash('You were logged in')
-                return redirect(url_for('survey'))
+                if user.surveyVisted == 1:
+                    return redirect(url_for('user', username=current_user.username))
+                else:
+                    return redirect(url_for('survey'))
         flash('Incorrect username/password. Try again.')
     return render_template('login_Bootstrap.html', form=form, title="Login")
 
@@ -69,6 +71,8 @@ def signup():
 @app.route('/survey', methods=['GET', 'POST'])
 @login_required
 def survey():
+    visit = User.query.filter_by(username=current_user.username).first()
+    visit.surveyVisted = 1
     form = SurveyForm()
     if form.validate_on_submit():
         option = Survey(major = form.major.data, outdoor = form.outdoor.data, indoor = form.indoor.data, user_id = current_user.id)
@@ -78,22 +82,19 @@ def survey():
 
     return render_template('surveyBootstrap.html', form=form, title="Survey")
 
-''' Changing survey needs to be worked on. it wont update'''
+
 @app.route('/survey/updates', methods=['GET', 'POST'])
 @login_required
 def surveyUpdate():
-    person = User.query.filter_by(username=current_user.username).first()
-    userMajor = person.optionSurvey[0].major
-    userOutdoor = person.optionSurvey[0].outdoor
-    userIndoor = person.optionSurvey[0].indoor
+    personSurvey = Survey.query.filter_by(user_id=current_user.id).first()#finds data connection between survey and user
     form = SurveyUpdateForm()
     if form.validate_on_submit():
         if form.major.data:
-            userMajor=form.major.data
+            personSurvey.major=form.major.data
         if form.outdoor.data:
-            userOutdoor=form.outdoor.data
+            personSurvey.outdoor=form.outdoor.data
         if form.indoor.data:
-            userIndoor=form.indoor.data
+            personSurvey.indoor=form.indoor.data
         Survey(major = form.major.data, outdoor = form.outdoor.data, indoor = form.indoor.data, user_id = current_user.id)
         db.session.commit()
         flash("Activities Updated!")
@@ -114,21 +115,31 @@ def contact():
 @login_required
 def user(username):
     user = User.query.filter_by(username = username).first_or_404()
-    person = User.query.filter_by(username=current_user.username).first()
-    userMajor = person.optionSurvey[0].major
-    userOutdoor = person.optionSurvey[0].outdoor
-    userIndoor = person.optionSurvey[0].indoor
-    #userMajor = Survey.query.filter_by(major=major).first()
-    #userOutdoor = Survey.query.filter_by(outdoor=outdoor).first()
-    #userIndoor = survey.query.filter_by(indoor=indoor).first()
+    if user.surveyVisted == 1:
+        personSurvey = Survey.query.filter_by(user_id=current_user.id).first()
+    else:
+        return redirect(url_for('survey'))
 
-    return render_template('profile_Bootstrap.html', userMajor=userMajor, userOutdoor=userOutdoor, userIndoor=userIndoor)
+    return render_template('profile_Bootstrap.html', userMajor=personSurvey.major, userOutdoor=personSurvey.outdoor, userIndoor=personSurvey.indoor)
 
 
 @app.route('/profile/matches')
 @login_required
 def matches():
-    return render_template('matches_Bootstrap.html', title = "Your Matches:")
+
+    #finds relation of current user
+    match = Survey.query.filter_by(user_id = current_user.id).first()
+    #gets major of current user
+    match.major
+    #finds data of all other users with same major
+    foundMatch = Survey.query.filter_by(major = match.major)
+    
+    ## TODO:
+    #find other users in database
+    # all matching instances (this case major) and its user_id
+    #find user id that corresponds to the major
+    #use id to find username
+    return render_template('matches_Bootstrap.html', title = "Your Matches:", foundMatch = foundMatch)
 
 
 @app.route('/logout')

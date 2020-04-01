@@ -17,8 +17,7 @@ class User(UserMixin, db.Model):
     username = db.Column(db.String(64), index=True, unique=True)
     password = db.Column(db.String(80))
     email = db.Column(db.String(128), index=True, unique=True)
-    #interests = db.relationship('interests', backref="person", lazy='dynamic')
-    #majors = db.relationship('majors', backref="person",lazy='dynamic')
+    surveyVisted = db.Column(db.Boolean)
     optionSurvey = db.relationship('Survey', backref = "person", lazy = 'dynamic' )
 
     def __init__(self, username, password, email):
