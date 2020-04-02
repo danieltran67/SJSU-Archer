@@ -123,9 +123,9 @@ def user(username):
     return render_template('profile_Bootstrap.html', userMajor=personSurvey.major, userOutdoor=personSurvey.outdoor, userIndoor=personSurvey.indoor)
 
 
-@app.route('/profile/matches')
+@app.route('/profile/majorMatch')
 @login_required
-def matches():
+def majorMatch():
 
     #finds relation of current user
     match = Survey.query.filter_by(user_id = current_user.id).first()
@@ -133,13 +133,51 @@ def matches():
     match.major
     #finds data of all other users with same major
     foundMatch = Survey.query.filter_by(major = match.major)
-    
+
     ## TODO:
     #find other users in database
     # all matching instances (this case major) and its user_id
     #find user id that corresponds to the major
     #use id to find username
-    return render_template('matches_Bootstrap.html', title = "Your Matches:", foundMatch = foundMatch)
+    return render_template('majorMatch_Bootstrap.html', title = "Your Matches by Major", foundMatch = foundMatch)
+
+
+@app.route('/profile/indoorMatch')
+@login_required
+def indoorMatch():
+
+    #finds relation of current user
+    match = Survey.query.filter_by(user_id = current_user.id).first()
+    #gets indoor interests of current user
+    match.indoor
+    #finds data of all other users with same indoor interests
+    foundMatch = Survey.query.filter_by(indoor = match.indoor)
+
+    ## TODO:
+    #find other users in database
+    # all matching instances (this case indoor interests) and its user_id
+    #find user id that corresponds to the indoor interests
+    #use id to find username
+    return render_template('indoorMatch_Bootstrap.html', title = "Your Matches by Interests", foundMatch = foundMatch)
+
+
+@app.route('/profile/outdoorMatch')
+@login_required
+def outdoorMatch():
+
+    #finds relation of current user
+    match = Survey.query.filter_by(user_id = current_user.id).first()
+    #gets outdoor interests of current user
+    match.outdoor
+    #finds data of all other users with same outdoor interests
+    foundMatch = Survey.query.filter_by(outdoor = match.outdoor)
+
+    ## TODO:
+    #find other users in database
+    # all matching instances (this case outdoor interests) and its user_id
+    #find user id that corresponds to the outdoor interests
+    #use id to find username
+    return render_template('outdoorMatch_Bootstrap.html', title = "Your Matches by Interests", foundMatch = foundMatch)
 
 
 @app.route('/logout')

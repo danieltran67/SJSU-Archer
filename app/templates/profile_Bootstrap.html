@@ -48,6 +48,14 @@
     <h1>Interests</h1>
     <p>{{ userOutdoor }}</p>
     <p>{{ userIndoor }}</p>
-  <a href="{{url_for('matches')}}" class="btn btn-success btn-lg active" role="button" aria-pressed="true">Match me!</a>
+    <div class="form-group">
+     <label for="matchFilter">Match me by...</label>
+     <select class="form-control" id="matchFilter" onchange="location = this.value;">
+       <option value="">Select a filter...</option>
+       <option value="{{url_for('majorMatch')}}">Major</option>
+       <option value="{{url_for('indoorMatch')}}">Indoor Interests</option>
+       <option value="{{url_for('outdoorMatch')}}">Outdoor Interests</option>
+     </select>
+   </div>
   </div>
 {% endblock %}
