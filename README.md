@@ -1,2 +1,1 @@
-# SJSU-Archer
-A website to find similar interests for SJSU students
+#Use only app folder, archer.db, archer.py, config.py, and requirements.txt
