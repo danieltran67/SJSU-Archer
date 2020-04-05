@@ -11,25 +11,45 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand">Archer</a>
+            <br>
+          <a class="navbar-brand"><font size="+3" color="#ffc778">Archer</font></a>
         </div>
         <div id="navbar" class="collapse navbar-collapse">
+        <br>
           <ul class="nav navbar-nav navbar-font">
-            <li><a href="{{ url_for('homePage') }}">Home</a></li>
+              <li><a>........</a></li>
+              <li><a href="{{ url_for('homePage') }}"><font size="+3" color="#ffc778"> Home </font> </a></li>
             {% if current_user.is_anonymous %}
-              <li><a href="{{ url_for('login') }}">Login</a></li>
-            <li><a href="{{ url_for('signup') }}">Sign Up</a></li>
-            <li><a href="{{ url_for('about') }}">About Us</a></li>
-            <li><a href="{{ url_for('contact') }}">Contact</a></li>
+                <li><a>........</a></li>
+                <li><a href="{{ url_for('login') }}"><font size="+3" color="#ffc778">Login</font></a></li>
+                <li><a>........</a></li>
+                <li><a href="{{ url_for('signup') }}"><font size="+3" color="#ffc778">Sign Up</font></a></li>
+                <li><a>........</a></li>
+                <li><a href="{{ url_for('about') }}"><font size="+3" color="#ffc778">About Us</font></a></li>
+                <li><a>........</a></li>
+                <li><a href="{{ url_for('contact') }}"><font size="+3" color="#ffc778">Contact Us</font></a></li>
             {% else %}
-              <li><a href="{{ url_for('user', username = current_user.username) }}">Profile</a></li>
-              <li><a href="{{ url_for('about') }}">About Us</a></li>
-              <li><a href="{{ url_for('contact') }}">Contact</a></li>
-              <li><a href="{{ url_for('logout') }}">Logout</a></li>
+                <li><a href="{{ url_for('user', username = current_user.username) }}"><font size="+3" color="#ffc778">Profile</font></a></li>
+                <li><a href="{{ url_for('about') }}"><font size="+3" color="#ffc778">About Us</font></a></li>
+                <li><a href="{{ url_for('contact') }}"><font size="+3" color="#ffc778">Contact</font></a></li>
+                <li><a href="{{ url_for('logout') }}"><font size="+3" color="#ffc778">Logout</font></a></li>
             {% endif %}
           </ul>
         </div>
       </div>
+     <body>
+
+    <h1 style="color:#f5d7ab;"> <br> <br> <center> Join Archer And Start Making Friends Today </center> </h1>
+    <center><br>
+    <h1 style="color:#f5d7ab;">
+    ░▄██▄██▄/\",,¸/\. /\",,¸/\ <br>&nbsp&nbsp&nbsp&nbsp
+    ░███████(=•_•=)(=•_•=)< <br>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+    ░░▀███▀__/▶●◀\| /▶●◀\__ <br>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+    ░░░░▀░_(ö¯)\|/( ö¯)(¯ö)\|/(ö¯) <br>
+    </h1>
+    </center>
+     <br><br><br><br><br><br><br><br><br><br><br>
+    </body>
     </nav>
     <!--NAVBAR CODE-->
 
