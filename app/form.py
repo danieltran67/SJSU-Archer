@@ -29,6 +29,7 @@ class RegisterForm(FlaskForm):
         if user is not None:
             raise ValidationError('Email taken. Please use a different email.')
 
+
 class SurveyForm(FlaskForm):
     major = SelectField(u'Major', choices=[('Computer Engineering', 'Computer Engineering'),
                                            ('Computer Science', "Computer Science"),
@@ -58,7 +59,8 @@ class SurveyUpdateForm(FlaskForm):
         super(SurveyUpdateForm, self).__init__(*arg, **kwargs)
         self.oldData = oldData
 '''
-
+'''
 @app.login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
+'''

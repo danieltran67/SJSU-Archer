@@ -48,9 +48,9 @@
    <option value="{{url_for('outdoorMatch')}}">Outdoor Interests</option>
  </select>
 </div>
-<p> These people have similar indoor interests!:
+<p> These people are in the same major!:
     {% for matches in foundMatch %}
-  <li> {{ matches.major }}, {{ matches.indoor }}, {{ matches.outdoor }}</li>
+  <li> {{ matches.major }}, {{ matches.indoor }}, {{ matches.outdoor }}, <a href="{{ url_for('userProfile', username = matches.person.username) }}"> {{ matches.person.username }}</a></li>
 </p>
 {% endfor %}
 {% endblock %}

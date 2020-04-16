@@ -44,6 +44,12 @@
     <h1>Major</h1>
     {{ userMajor }}
   </div>
+  <div class = "friends">
+    <h1>Friends</h1>
+    {% for friend in current_user.friends %}
+    <p>{{ friend.username }}</p>
+    {% endfor %}
+  </div>
   <div class="Interests">
     <h1>Interests</h1>
     <p>{{ userOutdoor }}</p>

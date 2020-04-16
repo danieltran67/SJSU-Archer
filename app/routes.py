@@ -119,8 +119,23 @@ def user(username):
         personSurvey = Survey.query.filter_by(user_id=current_user.id).first()
     else:
         return redirect(url_for('survey'))
-
     return render_template('profile_Bootstrap.html', userMajor=personSurvey.major, userOutdoor=personSurvey.outdoor, userIndoor=personSurvey.indoor)
+
+@app.route('/profile/user_page/<username>')
+def userProfile(username):
+    user = User.query.filter_by(username = username).first_or_404()
+    personSurvey = Survey.query.filter_by(user_id=user.id).first()
+    return render_template('accountProfile_Bootstrap.html', userMajor=personSurvey.major, userOutdoor=personSurvey.outdoor, userIndoor=personSurvey.indoor, user = user)
+
+@app.route('/add_friend/<username>')
+@login_required
+def addFriend(username):
+    user = User.query.filter_by(username = username).first()
+    current_user.befriend(user)
+    db.session.commit()
+    return redirect(url_for('userProfile', username = username))
+
+
 
 
 @app.route('/profile/majorMatch')
@@ -130,15 +145,11 @@ def majorMatch():
     #finds relation of current user
     match = Survey.query.filter_by(user_id = current_user.id).first()
     #gets major of current user
-    match.major
     #finds data of all other users with same major
-    foundMatch = Survey.query.filter_by(major = match.major)
+    foundMatch = Survey.query.filter_by(major = match.major).all()
+    #find corresponding link between user_id and user
 
-    ## TODO:
-    #find other users in database
-    # all matching instances (this case major) and its user_id
-    #find user id that corresponds to the major
-    #use id to find username
+
     return render_template('majorMatch_Bootstrap.html', title = "Your Matches by Major", foundMatch = foundMatch)
 
 

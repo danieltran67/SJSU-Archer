@@ -50,7 +50,7 @@
 </div>
 <p> These people are in the same major!:
     {% for matches in foundMatch %}
-  <li> {{ matches.major }}, {{ matches.indoor }}, {{ matches.outdoor }}</li>
+  <li> {{ matches.major }}, {{ matches.indoor }}, {{ matches.outdoor }}, <a href="{{ url_for('userProfile', username = matches.person.username) }}"> {{ matches.person.username }}</a></li>
 </p>
 {% endfor %}
 {% endblock %}
