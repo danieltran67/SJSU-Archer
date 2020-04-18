@@ -1,0 +1,53 @@
+<html>
+<head>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<link href="{{ url_for("static", filename='css/styles1.css')}}" type="text/css" rel="stylesheet"/>
+</head>
+<body>
+<div id="wrapper">
+
+<div class="form_div">
+<p class="form_label">SURVEY</p>
+<form>
+<br>
+<!-- Dropdown menu code (not ready)
+<div class="dropdown">
+  <button class="majorbtn">Major</button>
+  <div vlass="dropdown-child">
+    <a href="" >Computer Engineering</a>
+    <a href="" >Computer Science</a>
+    <a href="" >Software Engineering</a>
+  </div>
+</div>
+  -->
+  <p class = "form_label">MAJOR</p>
+  <input type = "radio" id = "CMPE" name="MAJOR" value="CMPE">
+    <label for="CMPE">Computer Engineering</label><br>
+  <input type = "radio" id="CS" name = "MAJOR" value = "CS">
+    <label for="CS">Computer Science</label><br>
+  <input type = "radio" id = "SE" name = "MAJOR" value = "SE">
+    <label for = "SE">Software Engineering</label><br>
+<br>
+<p class = "form_label">OUTDOOR INTERESTS</p>
+<p><input type="checkbox" id="interest1" name="interest1" value="Concerts">
+  <label for="interest1">Concerts</label><br>
+  <p><input type="checkbox" id="interest2" name="interest2" value="Exercise">
+    <label for="interest2">Exercise</label><br>
+    <p><input type="checkbox" id="interest3" name="interest3" value="Picnics">
+      <label for="interest3">Picnics</label><br>
+<br>
+<p class = "form_label">INDOOR INTERESTS</p>
+  <p><input type="checkbox" id="interest4" name="interest4" value="VideoGames">
+    <label for="interest4">Video Games</label><br>
+    <p><input type="checkbox" id="interest5" name="interest5" value="Studying">
+      <label for="interest5">Studying</label><br>
+      <p><input type="checkbox" id="interest6" name="interest6" value="Cooking">
+        <label for="interest6">Cooking</label><br>
+        <p><input type="checkbox" id="interest7" name="interest7" value="Music">
+          <label for="interest7">Music</label><br>
+<p><input type="submit" value="SUBMIT"></p>
+</div>
+</form>
+</div>
+</body>
+</html>
