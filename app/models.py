@@ -1,7 +1,7 @@
 from app import *
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
-
+from datetime import datetime
 
 '''
 class to make data table.
@@ -22,12 +22,17 @@ class User(UserMixin, db.Model):
     password = db.Column(db.String(80))
     email = db.Column(db.String(128), index=True, unique=True)
     surveyVisted = db.Column(db.Boolean)
+    seenAtTime = db.Column(db.DateTime)
     optionSurvey = db.relationship('Survey', backref = "person", lazy = 'dynamic')
     friends = db.relationship('User', secondary = friendsList,
                             primaryjoin=id==friendsList.c.user_id,
                             secondaryjoin=id==friendsList.c.friend_id,
                             backref = db.backref('friendsList', lazy = 'dynamic'),
                             lazy = 'dynamic')
+    messageSent = db.relationship('Message', foreign_keys = 'Message.sender_id',
+                            backref = 'sender', lazy = 'dynamic')
+    messageRecieved = db.relationship('Message', foreign_keys = 'Message.recipient_id',\
+                            backref = 'reciever', lazy = 'dynamic')
 
 
     def __init__(self, username, password, email):
@@ -46,6 +51,10 @@ class User(UserMixin, db.Model):
 
     def isFriendsWith(self, friend):
         return self.friends.filter(friend.c.friend_id == user.id)
+
+    def newMessages(self):
+        seenAt = self.seenAtTime or datetime(1900, 1, 1)
+        return Message.query.filter_by(reciever=self).filter(Message.timestamp > seenAt).count()
 
     def __repr__(self):
         return "User(username='{self.username}', " \
@@ -101,12 +110,24 @@ class majors(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     majors = db.Column(db.String())
     user_id = db.Column(db.Integer, db.ForeignKey('user.id')) #links choices to user
-
-
     '''
+class Message(db.Model):
+    id = db.Column(db.Integer, primary_key = True)
+    sender_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    recipient_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    body = db.Column(db.String(140))
+    timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
+
+    def __init__(self, sender_id, recipient_id, body):
+        self.sender_id = sender_id
+        self.recipient_id = recipient_id
+        self.body = body
+
+    def __repr__(self):
+        return '<Message {}>'.format(self.body)
+
 
 # create database. In case needed to remake database, delete current archer.db
 # and run code below
-
 #db.create_all()
 #db.session.commit()

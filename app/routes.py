@@ -9,14 +9,15 @@ from flask_login import current_user, login_required, login_user, logout_user, U
 from flask_wtf import FlaskForm
 from werkzeug.routing import ValidationError
 from werkzeug.security import generate_password_hash, check_password_hash
-from wtforms import StringField, BooleanField, PasswordField, SubmitField
+from wtforms import StringField, BooleanField, PasswordField, SubmitField, TextAreaField
 from wtforms.validators import InputRequired, Length, Email
 from app import db, app, login_manager, form  # imported from init__
 import secrets
 import os
 from werkzeug.urls import url_parse
-from app.form import LoginForm, RegisterForm, SurveyForm, SurveyUpdateForm
-from app.models import User, Survey
+from app.form import LoginForm, RegisterForm, SurveyForm, SurveyUpdateForm, MessageForm
+from app.models import User, Survey, Message
+from datetime import datetime
 
 
 #db.create_all()
@@ -109,7 +110,7 @@ def about():
 
 @app.route('/contact', methods=['GET', 'POST'])
 def contact():
-    return render_template('contactUs.html')
+    return render_template('ContactUs_Bootstrap.html')
 
 @app.route('/profile/<username>')
 @login_required
@@ -127,12 +128,41 @@ def userProfile(username):
     personSurvey = Survey.query.filter_by(user_id=user.id).first()
     return render_template('accountProfile_Bootstrap.html', userMajor=personSurvey.major, userOutdoor=personSurvey.outdoor, userIndoor=personSurvey.indoor, user = user)
 
+@app.route('/direct_message', methods=['GET', 'POST'])
+@login_required
+def chat():
+    return render_template('chat_Bootstrap.html')
+
+@app.route('/message/<username>', methods = ['GET', 'POST'])
+@login_required
+def sendMsg(username):
+    user = User.query.filter_by(username = username).first_or_404()
+    #finds all past message user has sent
+    userSentMsg = Message.query.filter_by(sender_id = current_user.id)
+    current_user.seenAt = datetime.utcnow()
+    db.session.commit()
+    messages = current_user.messageRecieved.order_by(Message.timestamp.desc())
+    #send new message
+    form = MessageForm()
+    if form.validate_on_submit():
+        msg = Message(sender_id = current_user.id, recipient_id=user.id, body = form.message.data)
+        db.session.add(msg)
+        db.session.commit()
+        flash('Message Sent')
+        return redirect(url_for('sendMsg', username = username))
+    return render_template('sendMsg_Bootstrap.html', title ='Messaging', form = form, user = user, messages = messages)
+
+
+
+
+
 @app.route('/add_friend/<username>')
 @login_required
 def addFriend(username):
     user = User.query.filter_by(username = username).first()
     current_user.befriend(user)
     db.session.commit()
+    flash('Request sent!')
     return redirect(url_for('userProfile', username = username))
 
 
@@ -164,11 +194,6 @@ def indoorMatch():
     #finds data of all other users with same indoor interests
     foundMatch = Survey.query.filter_by(indoor = match.indoor)
 
-    ## TODO:
-    #find other users in database
-    # all matching instances (this case indoor interests) and its user_id
-    #find user id that corresponds to the indoor interests
-    #use id to find username
     return render_template('indoorMatch_Bootstrap.html', title = "Your Matches by Interests", foundMatch = foundMatch)
 
 
@@ -183,11 +208,6 @@ def outdoorMatch():
     #finds data of all other users with same outdoor interests
     foundMatch = Survey.query.filter_by(outdoor = match.outdoor)
 
-    ## TODO:
-    #find other users in database
-    # all matching instances (this case outdoor interests) and its user_id
-    #find user id that corresponds to the outdoor interests
-    #use id to find username
     return render_template('outdoorMatch_Bootstrap.html', title = "Your Matches by Interests", foundMatch = foundMatch)
 
 

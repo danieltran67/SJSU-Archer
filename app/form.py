@@ -1,8 +1,8 @@
 from flask_login import login_user
 from flask_wtf import FlaskForm
 from werkzeug.routing import ValidationError
-from wtforms import StringField, BooleanField, PasswordField, SubmitField, SelectField
-from wtforms.validators import InputRequired, Length, Email
+from wtforms import StringField, BooleanField, PasswordField, SubmitField, SelectField, TextAreaField
+from wtforms.validators import InputRequired, Length, Email, DataRequired
 from app import Bootstrap
 from app.models import User, app
 
@@ -54,6 +54,19 @@ class SurveyUpdateForm(FlaskForm):
     indoor = SelectField(u'Indoor Activities', choices=[('Video games', 'Video games'),
                                            ('Reading', "Reading"),
                                            ('Music', 'Music')])
+
+class MessageForm(FlaskForm):
+    message = TextAreaField('Message', validators=[DataRequired(), Length(min=0, max=120)])
+    submitMsg = SubmitField('send')
+
+
+
+
+
+
+
+
+
 '''
     def __init__(self, oldData, *arg, **kwargs):
         super(SurveyUpdateForm, self).__init__(*arg, **kwargs)
