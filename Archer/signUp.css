@@ -1,0 +1,38 @@
+
+.btn-block { width: 100%; display:block; }
+.btn-block {padding: 13px 16px}
+.btn-primary {background-color: orange}
+.btn-block {border-radius: 16px}
+
+body {
+    width: 90%;
+    height:95%;
+    background: #180E05;
+}
+.login {
+    position: absolute;
+    top: 35%;
+    left: 50%;
+    margin: -150px 0 0 -150px;
+    width:300px;
+    height:300px;
+}
+.login h2 { color: orange;
+            text-shadow: 0 0 8px rgba(0,0,0,0.6);
+            letter-spacing:2px;
+            text-align:center;
+          }
+
+input {
+    width: 100%;
+    margin-bottom: 29px;
+    background: rgba(0,0,0,0.3);
+
+    padding: 12px;
+    font-size: 15px;
+    color: orange;
+    text-shadow: 3px 3px 3px rgba(0,0,0,0.9);
+    border: 3px solid rgba(0,0,0,0.9);
+    border-radius: 16px;
+    box-shadow: inset 0 -8px 49px rgba(80,80,80,0.1), 0 3px 3px rgba(220,220,220,0.2)
+}
