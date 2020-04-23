@@ -1,7 +1,11 @@
+from wtforms import StringField, SubmitField, PasswordField
+from wtforms.validators import InputRequired, Email, Length
+
 from app import *
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
 from datetime import datetime
+from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 
 '''
 class to make data table.
@@ -60,21 +64,22 @@ class User(UserMixin, db.Model):
         return "User(username='{self.username}', " \
                 "email='{self.email}', " \
                "password='{self.password}')".format(self=self)
-'''
-class Request(db.Model):
-    id = db.Column(db.Integer, primary_key = True)
 
-class userRelation(db.Model):
-    id = db.Column(db.Integer, ForeignKey('user.id'), primary_key = True)
-    request_from_id = db.Column(db.Integer, ForeignKey('user.id'), primary_key = True)
-    request_id = db.Column(db.Integer, ForeignKey('request.id'))
+    # Creates a id token that expires in 30 minutes
+    def get_reset_token(self, expires_sec=1800):
+        s = Serializer(app.config['SECRET_KEY'], expires_sec)
+        return s.dumps({'user_id': self.id}).decode('utf-8')
 
-    approved = db.Column(db.Boolean, default = False)
+    @staticmethod
+    # Takes a token, tries to load the token and returns a user id
+    def verify_reset_token(token):
+        s = Serializer(app.config['SECRET_KEY'])
+        try:
+            user_id = s.loads(token)['user_id']
+        except:
+            return None
+        return User.query.get(user_id)
 
-    user = db.relationship('User', foreign_keys[id], uselist = False)
-    request_from = db.relationship('User', foreign_keys=[request_from_id], uselist = False)
-    request = db.relationship('Request', uselist=False, cascade='all, delete-orphan', single_parent = True)
-'''
 class Survey(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     major = db.Column(db.String(100))
@@ -94,23 +99,6 @@ class Survey(db.Model):
                "indoor='{self.indoor}', " \
                "user_id='{self.user_id}')".format(self=self)
 
-'''
-class interests(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    interests = db.Column(db.String())
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id')) #links choices to user
-
-    def __init__(self, interests):
-        self.interests = interests
-
-    def __repr__(self):
-        return "User(interests = '{self.interests}')".format(self=self)
-
-class majors(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    majors = db.Column(db.String())
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id')) #links choices to user
-    '''
 class Message(db.Model):
     id = db.Column(db.Integer, primary_key = True)
     sender_id = db.Column(db.Integer, db.ForeignKey('user.id'))

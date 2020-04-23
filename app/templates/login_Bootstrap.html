@@ -70,8 +70,18 @@
             <font color="#f5d7ab"><input class="btn btn-success" type="submit" value="Login">
         </d1>
     </form>
+
+        <!--OLD FORGOT PASSWORD CODE-->
+        <div class="container" style="text-align: center">
+            <span class="psw">
+                <a href="{{ url_for('reset_request') }}">Forgot Password?</a>
+            </span>
+        </div>
+        <!--OLD FORGOT PASSWORD CODE-->
+
     </div>
     <!--LOGIN CODE-->
+
 {% endblock %}
 
 {% block scripts %}

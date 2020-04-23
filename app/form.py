@@ -60,8 +60,15 @@ class MessageForm(FlaskForm):
     submitMsg = SubmitField('send')
 
 
+# Class needed for resets password page
+class RequestResetForm(FlaskForm):
+    email = StringField('email', validators=[InputRequired(), Email(message='Invalid email'), Length(max=50)])
+    submit = SubmitField('Request Password Reset')
 
 
+class ResetPasswordForm(FlaskForm):
+    password = PasswordField('password', validators=[InputRequired(), Length(min=4, max=40)])
+    submit = SubmitField('Reset Password')
 
 
 

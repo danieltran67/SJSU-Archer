@@ -1,4 +1,10 @@
+import pickle
+import sys
+
+import keyring as keyring
+import yagmail as yagmail
 from flask import Flask
+from flask_wtf import FlaskForm
 from config import Config
 from flask_sqlalchemy import SQLAlchemy
 from flask_script import Manager
@@ -26,6 +32,11 @@ login_manager.login_message_category = 'info'
 migrate = Migrate(app,db)
 manager = Manager(app)
 manager.add_command('db', MigrateCommand)
+
+
+yagmail.register('targonthresh@gmail.com', 'a2b2c2d2')
+keyring.set_password('yagmail', 'mygmailusername', 'mygmailpassword')
+yag = yagmail.SMTP("targonthresh@gmail.com")
 
 
 
