@@ -1,4 +1,4 @@
-from app import app
+from app import app, socketio
 from app import manager
 
 """
@@ -13,7 +13,6 @@ python .\archer.py db upgrade
 
 #if __name__ =='__main__':
 #    manager.run()
-
-
+socketio.run(app, debug=True)
 """This file runs the website. We separated it so no one touches it."""
-app.run(debug=True)
+#app.run(debug=True)

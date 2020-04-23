@@ -1,14 +1,15 @@
 import pickle
 import sys
 
+from datetime import datetime
 from flask import render_template, flash, redirect, url_for, session, request
 from flask_login import current_user, login_required, login_user, logout_user, UserMixin
-from app import db, app, login_manager, form, yagmail, yag  # imported from init__,
+from app import db, app, socketio, login_manager, form, yagmail, yag  # imported from init__,
 from app.form import LoginForm, RegisterForm, SurveyForm, SurveyUpdateForm, \
     MessageForm, RequestResetForm, ResetPasswordForm
 from app.models import User, Survey, Message, Serializer
 from datetime import datetime
-
+import array as arr
 
 """
 NOTE: This python file does NOT run the website. That is archer.py
@@ -19,7 +20,6 @@ a database called db.sqlite3.
 The database is created via sqlite3 and the coed is found in models.py.
 
 """
-
 
 
 @app.route('/')
@@ -173,12 +173,12 @@ def chat():
     return render_template('chat_Bootstrap.html')
 
 
-@app.route('/message/<username>', methods=['GET', 'POST'])
+'''@app.route('/message/<username>', methods=['GET', 'POST'])
 @login_required
 def sendMsg(username):
     user = User.query.filter_by(username=username).first_or_404()
     # finds all past message user has sent
-    userSentMsg = Message.query.filter_by(sender_id=current_user.id)
+    userSentMsg = Message.query.filter_by(sender_id=current_user.id).all()
     current_user.seenAt = datetime.utcnow()
     db.session.commit()
     messages = current_user.messageRecieved.order_by(Message.timestamp.desc())
@@ -190,7 +190,38 @@ def sendMsg(username):
         db.session.commit()
         flash('Message Sent')
         return redirect(url_for('sendMsg', username=username))
-    return render_template('sendMsg_Bootstrap.html', title='Messaging', form=form, user=user, messages=messages)
+    return render_template('sendMsg_Bootstrap.html', title='Messaging',
+                           form=form, user=user,
+                           messages=messages)'''
+
+
+@app.route('/message/<username>', methods=['GET', 'POST'])
+@login_required
+def sendMsg(username):
+    user = User.query.filter_by(username=username).first_or_404()
+    userSentMsg = Message.query.filter_by(sender_id=current_user.id).all()
+    receiverMsg = Message.query.filter_by(recipient_id=current_user.id).all()
+    messages = current_user.messageRecieved.order_by(Message.timestamp.desc())
+
+    chatLog = []
+    for userSentMsg in userSentMsg:
+        print(userSentMsg.body)
+
+        chatLog.append(user.username + ": " + userSentMsg.body + "     ")
+
+
+    form = MessageForm()
+
+    if form.validate_on_submit():
+        msg = Message(sender_id=current_user.id, recipient_id=user.id, body=form.message.data)
+        db.session.add(msg)
+        db.session.commit()
+        flash('Message Sent')
+        return redirect(url_for('sendMsg', username=username))
+
+    return render_template('sendMsg_Bootstrap.html', title='Messaging',
+                           form=form, user=user,
+                           messages=messages, chatLog=chatLog)
 
 
 @app.route('/add_friend/<username>')

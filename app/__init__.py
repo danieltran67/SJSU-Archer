@@ -1,25 +1,24 @@
-import pickle
-import sys
 
 import keyring as keyring
 import yagmail as yagmail
 from flask import Flask
-from flask_wtf import FlaskForm
-from config import Config
 from flask_sqlalchemy import SQLAlchemy
 from flask_script import Manager
 from flask_migrate import Migrate, MigrateCommand
 from flask_bootstrap import Bootstrap
-from flask_login import UserMixin, LoginManager
-import os
+from flask_login import LoginManager
+from flask_socketio import SocketIO
 
 #initialize app, database, and commands
 
 app = Flask(__name__)
-SECRET_KEY = "its a secret"
+SECRET_KEY = 'vnkdjnfjknfl1232#'
+socketio = SocketIO(app)
+
 app.config['SECRET_KEY'] = SECRET_KEY
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite3'
+
 db = SQLAlchemy(app)
 Bootstrap(app)
 

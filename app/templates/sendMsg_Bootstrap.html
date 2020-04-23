@@ -46,23 +46,17 @@
     <!--NAVBAR CODE-->
     <br><br><br><br><br><br>
     <br><br><br><br><br><br>
-    <div>
-      {% with flash = get_flashed_messages(with_categories=true) %}
-      <!-- Categories: success (green), info (blue), warning (yellow), danger (red) -->
-      {% if flash %}
-      {% for category, flash in flash %}
-        <div class="alert alert-{{ category }} alert-dismissible" role="alert">
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <!-- <strong>Title</strong> --> {{ flash }}
-        </div>
-      {% endfor %}
-      {% endif %}
-      {% endwith %}
+<div style=" position:relative; width: 200px; height: 150px; left:80px; overflow-y: scroll;">
+    <!-- Scroll bar present but disabled when less content -->
+    {% for chatLog_text in chatLog %}
+        {{ chatLog_text }} <br>
+    {% endfor %}
 </div>
+
+
     <h1>{{ ('Sending Message to ') }}{{ user.username }}</h1>
-    <p>{% for msg in messages %}
-    <li>{msg.sender.body}</li>
-    {% endfor %}</p>
+    {% for msg in messages %}
+    {% endfor %}
     <div class="container">
     <form method = "POST" action="{{ url_for('sendMsg', username = user.username)}}">
         <div class="col-md-4">
