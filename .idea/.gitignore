@@ -3,4 +3,8 @@
 
 # Datasource local storage ignored files
 /dataSources/
+<<<<<<< HEAD
 /dataSources.local.xml
+=======
+/dataSources.local.xml
+>>>>>>> FlaskChat_v7
