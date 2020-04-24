@@ -13,6 +13,7 @@ python .\archer.py db upgrade
 
 #if __name__ =='__main__':
 #    manager.run()
+
 socketio.run(app, debug=True)
 """This file runs the website. We separated it so no one touches it."""
 #app.run(debug=True)

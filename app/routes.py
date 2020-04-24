@@ -1,7 +1,10 @@
 import pickle
+import sqlite3
 import sys
+from aifc import Error
 
 from datetime import datetime
+
 from flask import render_template, flash, redirect, url_for, session, request
 from flask_login import current_user, login_required, login_user, logout_user, UserMixin
 from app import db, app, socketio, login_manager, form, yagmail, yag  # imported from init__,
@@ -26,6 +29,8 @@ The database is created via sqlite3 and the coed is found in models.py.
 def homePage():
     return render_template('home.html')
 
+
+### ----LOGIN/REGISTRATION CODE ---------------------------------------------------------------------------------------
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -101,6 +106,9 @@ def signup():
     return render_template('signUp_Bootstrap.html', form=form, title="Register")
 
 
+### ----LOGIN/REGISTRATION CODE  END---------------------------------------------------------------------------------------
+
+### ----SURVEY CODE ---------------------------------------------------------------------------------------
 @app.route('/survey', methods=['GET', 'POST'])
 @login_required
 def survey():
@@ -137,6 +145,8 @@ def surveyUpdate():
     return render_template('updateSurveyBootstrap.html', form=form, title="Update Activities")
 
 
+### ----SURVEY CODE  END---------------------------------------------------------------------------------------
+
 @app.route('/about', methods=['GET', 'POST'])
 def about():
     return render_template('aboutUs.html', title="About Us")
@@ -147,6 +157,7 @@ def contact():
     return render_template('ContactUs_Bootstrap.html')
 
 
+### ----PROFILE CODE  ---------------------------------------------------------------------------------------
 @app.route('/profile/<username>')
 @login_required
 def user(username):
@@ -167,63 +178,121 @@ def userProfile(username):
                            userOutdoor=personSurvey.outdoor, userIndoor=personSurvey.indoor, user=user)
 
 
+### ----PROFILE CODE  END---------------------------------------------------------------------------------------
+
+
+
+
+### ----CHAT CODE ---------------------------------------------------------------------------------------
 @app.route('/direct_message', methods=['GET', 'POST'])
 @login_required
 def chat():
     return render_template('chat_Bootstrap.html')
 
 
-'''@app.route('/message/<username>', methods=['GET', 'POST'])
-@login_required
-def sendMsg(username):
-    user = User.query.filter_by(username=username).first_or_404()
-    # finds all past message user has sent
-    userSentMsg = Message.query.filter_by(sender_id=current_user.id).all()
-    current_user.seenAt = datetime.utcnow()
-    db.session.commit()
-    messages = current_user.messageRecieved.order_by(Message.timestamp.desc())
-    # send new message
-    form = MessageForm()
-    if form.validate_on_submit():
-        msg = Message(sender_id=current_user.id, recipient_id=user.id, body=form.message.data)
-        db.session.add(msg)
-        db.session.commit()
-        flash('Message Sent')
-        return redirect(url_for('sendMsg', username=username))
-    return render_template('sendMsg_Bootstrap.html', title='Messaging',
-                           form=form, user=user,
-                           messages=messages)'''
-
-
 @app.route('/message/<username>', methods=['GET', 'POST'])
 @login_required
 def sendMsg(username):
     user = User.query.filter_by(username=username).first_or_404()
-    userSentMsg = Message.query.filter_by(sender_id=current_user.id).all()
-    receiverMsg = Message.query.filter_by(recipient_id=current_user.id).all()
     messages = current_user.messageRecieved.order_by(Message.timestamp.desc())
-
-    chatLog = []
-    for userSentMsg in userSentMsg:
-        print(userSentMsg.body)
-
-        chatLog.append(user.username + ": " + userSentMsg.body + "     ")
-
-
+    chatLog = main(current_user.id, user.id)
     form = MessageForm()
 
     if form.validate_on_submit():
         msg = Message(sender_id=current_user.id, recipient_id=user.id, body=form.message.data)
+
         db.session.add(msg)
         db.session.commit()
-        flash('Message Sent')
-        return redirect(url_for('sendMsg', username=username))
 
+        flash('Message Sent')
+
+        chatLog = main(current_user.id, user.id)
+        i = 0
+        return redirect(url_for('sendMsg', username=username, ))
     return render_template('sendMsg_Bootstrap.html', title='Messaging',
                            form=form, user=user,
-                           messages=messages, chatLog=chatLog)
+                           messages=messages, chatLog=chatLog, len=len(chatLog))
 
 
+def create_connection(db_file):
+    conn = None
+    try:
+        conn = sqlite3.connect(db_file)
+    except Error as e:
+        print(e)
+
+    return conn
+
+
+'''def select_all_tasks(conn):  # Selects all rows from message table and display data
+    cur = conn.cursor()
+    cur.execute("SELECT * FROM message")
+
+    rows = cur.fetchall()
+
+    for row in rows:
+        print(row)'''
+
+
+def select_task_by_priority(conn, recipient_id,
+                            sender_id, ):  # Tasks by priority and fetches all that matches that priority
+    cur = conn.cursor()
+
+    '''
+    # Gets all of sender's/receiver's text
+    cur.execute("SELECT * FROM message "
+                "WHERE (sender_id=? AND recipient_id=?) "
+                "OR (sender_id=? AND recipient_id=?)",
+                (sender_id, recipient_id, recipient_id, sender_id,)) 
+    cur2.execute("SELECT * FROM user as u, message as m "
+                     "WHERE u.id = m.recipient_id OR u.id = m.sender_id ")'''
+    # Gets all of sender's/receiver's text
+    cur.execute("SELECT DISTINCT * FROM message as one "
+                "INNER JOIN user as two "
+                "ON "
+                "(((one.sender_id=? AND one.recipient_id=?) "
+                "OR (one.sender_id=? AND one.recipient_id=?)))"
+                "OR (two.id = one.recipient_id OR two.id = one.sender_id) "
+                "GROUP BY one.timestamp, two.username "
+                "HAVING two.id = one.recipient_id OR two.id = one.sender_id",
+                (sender_id, recipient_id, recipient_id, sender_id,))
+
+    rows = cur.fetchall()
+
+    return rows
+
+'''    for i in range(0, len(rows)):
+        if rows[i][1] == rows[i][5]:
+            print(rows[i][6], ": ", rows[i][3], "       ", rows[i][4])
+        elif rows[i][2] == rows[i][6]:
+            print(rows[i][6], ": ", rows[i][3], "       ", rows[i][4])
+'''
+
+
+
+
+''' # Gets sender's name
+    cur.execute("SELECT id FROM user u "
+                "WHERE "
+                "EXISTS (SELECT sender_id FROM message WHERE u.id = sender_id=?)", (sender_id,))
+    names = cur.fetchall()'''
+
+
+def main(senderCol, receiverCol):
+    database = r"C:\Users\dangy\PycharmProjects\SJSU-Archer\app\db.sqlite3"
+
+    # Create database connection
+    conn = create_connection(database)
+
+    chatLog = select_task_by_priority(conn, receiverCol, senderCol)
+    with conn:
+        return chatLog
+
+
+### ----CHAT CODE  END---------------------------------------------------------------------------------------
+
+
+### ----FREIND CODE ---------------------------------------------------------------------------------------
 @app.route('/add_friend/<username>')
 @login_required
 def addFriend(username):
@@ -271,6 +340,9 @@ def outdoorMatch():
     foundMatch = Survey.query.filter_by(outdoor=match.outdoor)
 
     return render_template('outdoorMatch_Bootstrap.html', title="Your Matches by Interests", foundMatch=foundMatch)
+
+
+### ----FREIND CODE  END---------------------------------------------------------------------------------------
 
 
 @app.route('/logout')

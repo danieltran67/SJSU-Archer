@@ -22,7 +22,7 @@
     <div id="navbar" class="collapse navbar-collapse">
     <br>
       <ul class="nav navbar-nav navbar-font">
-          <li><a>........</a></li>
+          <li><a>  >-{{ user.username }}-> </a></li>
           <li><a href="{{ url_for('homePage') }}"><font size="+1" color="#ffc778"> Home </font> </a></li>
         {% if current_user.is_anonymous %}
             <li><a>........</a></li>
@@ -46,17 +46,20 @@
     <!--NAVBAR CODE-->
     <br><br><br><br><br><br>
     <br><br><br><br><br><br>
-<div style=" position:relative; width: 200px; height: 150px; left:80px; overflow-y: scroll;">
-    <!-- Scroll bar present but disabled when less content -->
-    {% for chatLog_text in chatLog %}
-        {{ chatLog_text }} <br>
-    {% endfor %}
+<div class='panel-Body scroll' id = chatBody
+     style=" position:relative; width: 700px; height: 200px; left:80px; overflow-y: scroll;">
+        <!-- Scroll bar present but disabled when less content -->
+            {% for i in range(0,len) %}
+                {% if chatLog[i][1] == chatLog[i][5] %}
+                    {{ chatLog[i][6] }}: {{ chatLog[i][3] }}   -----------------------------------------{{ chatLog[i][4] }}  <br>
+                {% elif chatLog[i][2] == chatLog[i][6] %}
+                    {{ chatLog[i][6] }} : {{ chatLog[i][3] }}       {{ chatLog[i][4] }} <br>
+                {% endif %}
+            {% endfor %}
+
 </div>
 
-
     <h1>{{ ('Sending Message to ') }}{{ user.username }}</h1>
-    {% for msg in messages %}
-    {% endfor %}
     <div class="container">
     <form method = "POST" action="{{ url_for('sendMsg', username = user.username)}}">
         <div class="col-md-4">
