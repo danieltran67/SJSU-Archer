@@ -22,7 +22,7 @@
     <div id="navbar" class="collapse navbar-collapse">
     <br>
       <ul class="nav navbar-nav navbar-font">
-          <li><a>  >-{{ user.username }}-> </a></li>
+          <li><a>  >-{{ current_user.username }}-> </a></li>
           <li><a href="{{ url_for('homePage') }}"><font size="+1" color="#ffc778"> Home </font> </a></li>
         {% if current_user.is_anonymous %}
             <li><a>........</a></li>

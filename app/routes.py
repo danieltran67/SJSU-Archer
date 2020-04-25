@@ -7,7 +7,7 @@ from datetime import datetime
 
 from flask import render_template, flash, redirect, url_for, session, request
 from flask_login import current_user, login_required, login_user, logout_user, UserMixin
-from app import db, app, socketio, login_manager, form, yagmail, yag  # imported from init__,
+from app import db, app, login_manager, form, yagmail, yag  # imported from init__,
 from app.form import LoginForm, RegisterForm, SurveyForm, SurveyUpdateForm, \
     MessageForm, RequestResetForm, ResetPasswordForm
 from app.models import User, Survey, Message, Serializer
@@ -170,8 +170,16 @@ def user(username):
                            userIndoor=personSurvey.indoor)
 
 
-@app.route('/profile/user_page/<username>')
+@app.route('/profile/user_page/<username>') # This is the dashboard
 def userProfile(username):
+    user = User.query.filter_by(username=username).first_or_404()
+    personSurvey = Survey.query.filter_by(user_id=user.id).first()
+    return render_template('accountProfile_Bootstrap.html', userMajor=personSurvey.major,
+                           userOutdoor=personSurvey.outdoor, userIndoor=personSurvey.indoor, user=user)
+
+
+@app.route('/profile/user_page/<username>')
+def friendProfile(username):
     user = User.query.filter_by(username=username).first_or_404()
     personSurvey = Survey.query.filter_by(user_id=user.id).first()
     return render_template('accountProfile_Bootstrap.html', userMajor=personSurvey.major,
@@ -211,7 +219,8 @@ def sendMsg(username):
         return redirect(url_for('sendMsg', username=username, ))
     return render_template('sendMsg_Bootstrap.html', title='Messaging',
                            form=form, user=user,
-                           messages=messages, chatLog=chatLog, len=len(chatLog))
+                           messages=messages, chatLog=chatLog, len=len(chatLog),
+                           current_user=current_user)
 
 
 def create_connection(db_file):
@@ -224,61 +233,21 @@ def create_connection(db_file):
     return conn
 
 
-'''def select_all_tasks(conn):  # Selects all rows from message table and display data
-    cur = conn.cursor()
-    cur.execute("SELECT * FROM message")
-
-    rows = cur.fetchall()
-
-    for row in rows:
-        print(row)'''
-
-
 def select_task_by_priority(conn, recipient_id,
                             sender_id, ):  # Tasks by priority and fetches all that matches that priority
     cur = conn.cursor()
 
-    '''
     # Gets all of sender's/receiver's text
-    cur.execute("SELECT * FROM message "
-                "WHERE (sender_id=? AND recipient_id=?) "
-                "OR (sender_id=? AND recipient_id=?)",
-                (sender_id, recipient_id, recipient_id, sender_id,)) 
-    cur2.execute("SELECT * FROM user as u, message as m "
-                     "WHERE u.id = m.recipient_id OR u.id = m.sender_id ")'''
-    # Gets all of sender's/receiver's text
-    cur.execute("SELECT DISTINCT * FROM message as one "
-                "INNER JOIN user as two "
-                "ON "
-                "(((one.sender_id=? AND one.recipient_id=?) "
-                "OR (one.sender_id=? AND one.recipient_id=?)))"
-                "OR (two.id = one.recipient_id OR two.id = one.sender_id) "
-                "GROUP BY one.timestamp, two.username "
-                "HAVING two.id = one.recipient_id OR two.id = one.sender_id",
-                (sender_id, recipient_id, recipient_id, sender_id,))
+    cur.execute("SELECT sender_id, recipient_id FROM message as one "
+                "INTERSECT "
+                "SELECT recipient_id, sender_id FROM message as two ")
 
     rows = cur.fetchall()
 
     return rows
 
-'''    for i in range(0, len(rows)):
-        if rows[i][1] == rows[i][5]:
-            print(rows[i][6], ": ", rows[i][3], "       ", rows[i][4])
-        elif rows[i][2] == rows[i][6]:
-            print(rows[i][6], ": ", rows[i][3], "       ", rows[i][4])
-'''
 
-
-
-
-''' # Gets sender's name
-    cur.execute("SELECT id FROM user u "
-                "WHERE "
-                "EXISTS (SELECT sender_id FROM message WHERE u.id = sender_id=?)", (sender_id,))
-    names = cur.fetchall()'''
-
-
-def main(senderCol, receiverCol):
+def main(receiverCol, senderCol):
     database = r"C:\Users\dangy\PycharmProjects\SJSU-Archer\app\db.sqlite3"
 
     # Create database connection
@@ -286,6 +255,11 @@ def main(senderCol, receiverCol):
 
     chatLog = select_task_by_priority(conn, receiverCol, senderCol)
     with conn:
+        print("ReceiverCol: ", receiverCol, " | SenderCol: ", senderCol)
+
+        for chat in chatLog:
+            print(chat)
+
         return chatLog
 
 
@@ -299,7 +273,9 @@ def addFriend(username):
     user = User.query.filter_by(username=username).first()
     current_user.befriend(user)
     db.session.commit()
-    flash('Request sent!')
+    flash('Friend Added!')
+    if user.isFriendsWith(current_user):
+        return redirect(url_for('user', user))
     return redirect(url_for('userProfile', username=username))
 
 

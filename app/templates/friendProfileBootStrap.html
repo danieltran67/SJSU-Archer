@@ -1,0 +1,72 @@
+{% extends 'bootstrap/base.html' %}
+{% import "bootstrap/wtf.html" as wtf %}
+{% block title %}
+  {{title}}
+{% endblock %}
+
+
+{% block content %}
+<!--NAVBAR CODE-->
+<nav class="navbar navbar-inverse navbar-fixed-top">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+        <br>
+      <a class="navbar-brand"><font size="+3" color="#ffc778">Archer</font></a>
+    </div>
+    <div id="navbar" class="collapse navbar-collapse">
+    <br>
+      <ul class="nav navbar-nav navbar-font">
+          <li><a>........</a></li>
+          <li><a href="{{ url_for('homePage') }}"><font size="+1" color="#ffc778"> Home </font> </a></li>
+        {% if current_user.is_anonymous %}
+            <li><a>........</a></li>
+            <li><a href="{{ url_for('login') }}"><font size="+1" color="#ffc778">Login</font></a></li>
+            <li><a>........</a></li>
+            <li><a href="{{ url_for('signup') }}"><font size="+1" color="#ffc778">Sign Up</font></a></li>
+            <li><a>........</a></li>
+            <li><a href="{{ url_for('about') }}"><font size="+1" color="#ffc778">About Us</font></a></li>
+            <li><a>........</a></li>
+            <li><a href="{{ url_for('contact') }}"><font size="+1" color="#ffc778">Contact Us</font></a></li>
+        {% else %}
+            <li><a href="{{ url_for('user', username = current_user.username) }}"><font size="+1" color="#ffc778">Dashboard</font></a></li>
+            <li><a href="{{ url_for('about') }}"><font size="+1" color="#ffc778">About Us</font></a></li>
+            <li><a href="{{ url_for('contact') }}"><font size="+1" color="#ffc778">Contact</font></a></li>
+            <li><a href="{{ url_for('logout') }}"><font size="+1" color="#ffc778">Logout</font></a></li>
+        {% endif %}
+      </ul>
+    </div>
+  </div>
+ </nav>
+    <!--NAVBAR CODE-->
+    <br><br><br><br><br><br><br>
+
+
+    <!--SURVEY CODE-->
+        <br><br><br>
+    <div class="page-header">
+  <h1>{{ user.username }} <small>Friend Profile</small></h1>
+<h1>{{ current_user.username }} </h1>
+  <a href="{{ url_for('surveyUpdate')}}" class="btn btn-primary btn-lg active" role="button" aria-pressed="true">Edit your major or interests</a>
+  <div class = "major">
+    <h1>Major</h1>
+    {{ userMajor }}
+  </div>
+
+  <div class="Interests">
+    <h1>Interests</h1>
+    <p>{{ userOutdoor }}</p>
+    <p>{{ userIndoor }}</p>
+  </div>
+        <!--DATABASE CODE-->
+    {% endblock %}
+
+    {% block scripts %}
+        {{ super() }}
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.7/angular.min.js"></script>
+    {% endblock %}

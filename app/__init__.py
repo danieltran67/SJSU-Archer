@@ -13,7 +13,6 @@ from flask_socketio import SocketIO
 
 app = Flask(__name__)
 SECRET_KEY = 'vnkdjnfjknfl1232#'
-socketio = SocketIO(app)
 
 app.config['SECRET_KEY'] = SECRET_KEY
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False

@@ -34,7 +34,7 @@
             <li><a>........</a></li>
             <li><a href="{{ url_for('contact') }}"><font size="+1" color="#ffc778">Contact Us</font></a></li>
         {% else %}
-            <li><a href="{{ url_for('user', username = current_user.username) }}"><font size="+1" color="#ffc778">Profile</font></a></li>
+            <li><a href="{{ url_for('user', username = current_user.username) }}"><font size="+1" color="#ffc778">Dashboard</font></a></li>
             <li><a href="{{ url_for('chat') }}"><font size="+1" color="#ffc778">Direct Message</font></a></li>
             <li><a href="{{ url_for('about') }}"><font size="+1" color="#ffc778">About Us</font></a></li>
             <li><a href="{{ url_for('contact') }}"><font size="+1" color="#ffc778">Contact</font></a></li>
