@@ -9,8 +9,8 @@ from flask import render_template, flash, redirect, url_for, session, request
 from flask_login import current_user, login_required, login_user, logout_user, UserMixin
 from app import db, app, login_manager, form, yagmail, yag  # imported from init__,
 from app.form import LoginForm, RegisterForm, SurveyForm, SurveyUpdateForm, \
-    MessageForm, RequestResetForm, ResetPasswordForm
-from app.models import User, Survey, Message, Serializer
+    MessageForm, RequestResetForm, ResetPasswordForm, ReportForm
+from app.models import User, Survey, Message, Serializer, Report
 from datetime import datetime
 import array as arr
 
@@ -62,7 +62,7 @@ def reset_request():
             send_reset_email(user)
             flash('An email has been sent to reset your password')
             return redirect(url_for('login'))
-    return render_template('reset_request.html', title='Reset Password', form=form)
+    return render_template('reset_request_Bootstrap.html', title='Reset Password', form=form)
 
 
 def send_reset_email(user):
@@ -98,7 +98,8 @@ def reset_token(token):
 def signup():
     form = RegisterForm()
     if form.validate_on_submit():
-        new_user = User(username=form.username.data, email=form.email.data, password=form.password.data)
+        new_user = User(username=form.username.data, studentName=form.studentName.data,
+                        email=form.email.data, password=form.password.data)
         db.session.add(new_user)
         db.session.commit()
         flash('You are now registered!')
@@ -171,6 +172,7 @@ def user(username):
 
 
 @app.route('/profile/user_page/<username>') # This is the dashboard
+@login_required
 def userProfile(username):
     user = User.query.filter_by(username=username).first_or_404()
     personSurvey = Survey.query.filter_by(user_id=user.id).first()
@@ -179,6 +181,7 @@ def userProfile(username):
 
 
 @app.route('/profile/user_page/<username>')
+@login_required
 def friendProfile(username):
     user = User.query.filter_by(username=username).first_or_404()
     personSurvey = Survey.query.filter_by(user_id=user.id).first()
@@ -187,10 +190,36 @@ def friendProfile(username):
 
 
 ### ----PROFILE CODE  END---------------------------------------------------------------------------------------
+### ----REPORT PROFILE CODE ------------------------------------------------------------------------------------
+@app.route('/profile/user_page/<username>/report', methods=["GET", "POST"])
+def reportUser(username):
+    user = User.query.filter_by(username=username).first()
+    form = ReportForm()
+    if form.validate_on_submit():
+        report = Report(reasonReported=form.reasons.data, report_recipient_id = user.id)
+        db.session.add(report)
+        db.session.commit()
+        send_warning_email(username)
+        flash('User has been Reported!')
+        return redirect(url_for('friendProfile', username=username))
+    return render_template('reportUser_Bootstrap.html', user = user, form=form)
+
+def send_warning_email(username):
+    #find person ID
+    user = User.query.filter_by(username = username).first()
+    #find person being reported
+    personReported = Report.query.filter_by(report_recipient_id = user.id).order_by(Report.id.desc()).first()
+    body = f"You have been reported for: " \
+           f"{personReported.reasonReported}" \
+           f"Please reflect on your behavior before actions are taken"
+    receiver = user.email
+    yag.send(to=receiver,
+             subject="Archer account warning",
+             contents=body)
 
 
 
-
+### ----REPORT PROFILE CODE END ------------------------------------------------------------------------------------
 ### ----CHAT CODE ---------------------------------------------------------------------------------------
 @app.route('/direct_message', methods=['GET', 'POST'])
 @login_required
@@ -238,9 +267,22 @@ def select_task_by_priority(conn, recipient_id,
     cur = conn.cursor()
 
     # Gets all of sender's/receiver's text
+    cur.execute("SELECT DISTINCT * FROM message as one "
+                "INNER JOIN user as two "
+                "ON "
+                "(((one.sender_id=? AND one.recipient_id=?) "
+                "OR (one.sender_id=? AND one.recipient_id=?)))"
+                "OR (two.id = one.recipient_id OR two.id = one.sender_id) "
+                "GROUP BY one.timestamp, two.username "
+                "HAVING two.id = one.recipient_id OR two.id = one.sender_id",
+                (sender_id, recipient_id, recipient_id, sender_id,))
+    '''
     cur.execute("SELECT sender_id, recipient_id FROM message as one "
                 "INTERSECT "
-                "SELECT recipient_id, sender_id FROM message as two ")
+                "SELECT recipient_id, sender_id FROM message as two "
+                "GROUP BY one.timestamp, two.username "
+                "HAVING two.id = one.recipient_id OR two.id = one.sender_id")
+                '''
 
     rows = cur.fetchall()
 
@@ -248,13 +290,14 @@ def select_task_by_priority(conn, recipient_id,
 
 
 def main(receiverCol, senderCol):
-    database = r"C:\Users\dangy\PycharmProjects\SJSU-Archer\app\db.sqlite3"
+    database = r"C:\Users\johnh\Desktop\SJSU-Archer-FlaskChat_v7WORKING\app\db.sqlite3"
 
     # Create database connection
     conn = create_connection(database)
 
     chatLog = select_task_by_priority(conn, receiverCol, senderCol)
     with conn:
+
         print("ReceiverCol: ", receiverCol, " | SenderCol: ", senderCol)
 
         for chat in chatLog:

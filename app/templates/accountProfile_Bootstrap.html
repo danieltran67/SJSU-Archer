@@ -45,12 +45,12 @@
  </nav>
     <!--NAVBAR CODE-->
     <br><br><br><br><br><br>
-    <h1>{{ user.username }} </h1>
+    <h1>{{ user.studentName }} </h1>
     <a href="{{ url_for('addFriend', username = user.username)}}" class="btn btn-primary btn-lg active" role="button" aria-pressed="true">Add Friend</a>
     {% if user != current_user %}
                 <p>
                     <a href="{{ url_for('sendMsg', username=user.username) }}">
-                        {{ ('Send private message to ') }}{{ user.username }}
+                        {{ ('Send private message to ') }}{{ user.studentName }}
                     </a>
                 </p>
                 {% endif %}
@@ -62,4 +62,5 @@
         <h1>Interests</h1>
         <p>{{ userOutdoor }}</p>
         <p>{{ userIndoor }}</p>
+        <a href="{{ url_for('reportUser', username = user.username)}}" class="btn btn-primary btn-lg active" role="button" aria-pressed="true">Report User</a>
 {% endblock %}

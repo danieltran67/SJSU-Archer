@@ -34,7 +34,8 @@
             <li><a>........</a></li>
             <li><a href="{{ url_for('contact') }}"><font size="+1" color="#ffc778">Contact Us</font></a></li>
         {% else %}
-            <li><a href="{{ url_for('user', username = current_user.username) }}"><font size="+1" color="#ffc778">Profile</font></a></li>
+            <li><a href="{{ url_for('user', username = current_user.username) }}"><font size="+1" color="#ffc778">Dashboard</font></a></li>
+            <li><a href="{{ url_for('chat') }}"><font size="+1" color="#ffc778">Direct Message</font></a></li>
             <li><a href="{{ url_for('about') }}"><font size="+1" color="#ffc778">About Us</font></a></li>
             <li><a href="{{ url_for('contact') }}"><font size="+1" color="#ffc778">Contact</font></a></li>
             <li><a href="{{ url_for('logout') }}"><font size="+1" color="#ffc778">Logout</font></a></li>
@@ -44,38 +45,27 @@
   </div>
  </nav>
     <!--NAVBAR CODE-->
-    <!--LOGIN CODE-->
     <br><br><br><br><br><br>
-    <!-- flash alert -->
-    {% with flash = get_flashed_messages(with_categories=true) %}
-    <!-- Categories: success (green), info (blue), warning (yellow), danger (red) -->
-    {% if flash %}
-    {% for category, flash in flash %}
-      <div class="alert alert-{{ category }} alert-dismissible" role="alert">
-      <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-      <!-- <strong>Title</strong> --> {{ flash }}
-      </div>
-    {% endfor %}
-    {% endif %}
-    {% endwith %}
+<body>
+  <h1><font size = +3>Report {{ user.studentName }}
+    <!--SURVEY CODE-->
+        <br><br><br><br><br><br>
+        <div class="container">
+        <form method="POST">
+            <d1>
+                {{ form.hidden_tag() }}
+                {{ wtf.form_field(form.reasons) }}
+                <input class="btn btn-success" type="submit" value="Submit">
+            </d1>
+        </form>
+        </div>
+        <!--DATABASE CODE-->
+    {% endblock %}
 
-    <div class="container">
-    <form method="POST" action="{{ url_for('signup') }}">
-        <d1>
-            {{ form.hidden_tag() }}
-            {{wtf.form_errors(form, hiddens="only")}}
-            {{ wtf.form_field(form.username) }}
-            {{ wtf.form_field(form.password) }}
-            {{ wtf.form_field(form.email) }}
-            {{ wtf.form_field(form.studentName) }}
-            <input class="btn btn-success" type="submit" value="Create">
-        </d1>
-    </form>
-    </div>
-    <!--LOGIN CODE-->
-{% endblock %}
+    {% block scripts %}
+        {{ super() }}
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.7/angular.min.js"></script>
 
-{% block scripts %}
-    {{ super() }}
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.7/angular.min.js"></script>
+
+
 {% endblock %}

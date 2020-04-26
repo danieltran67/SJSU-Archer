@@ -22,11 +22,14 @@ friendsList = db.Table('friends',
 
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)  # unique id per user info
-    username = db.Column(db.String(64), index=True, unique=True)
+    username = db.Column(db.String(64), index=True, unique=True) #username for login
+    studentName = db.Column(db.String(64), index = True, unique = False) #Actual Student name
     password = db.Column(db.String(80))
     email = db.Column(db.String(128), index=True, unique=True)
     surveyVisted = db.Column(db.Boolean)
     seenAtTime = db.Column(db.DateTime)
+    reportTally = db.Column(db.Integer)
+    reportReason = db.relationship('Report', backref = "reason", lazy = 'dynamic')
     optionSurvey = db.relationship('Survey', backref = "person", lazy = 'dynamic')
     friends = db.relationship('User', secondary = friendsList,
                             primaryjoin=id==friendsList.c.user_id,
@@ -39,8 +42,9 @@ class User(UserMixin, db.Model):
                             backref = 'reciever', lazy = 'dynamic')
 
 
-    def __init__(self, username, password, email):
+    def __init__(self, username, studentName, password, email):
         self.username = username
+        self.studentName = studentName
         self.password = password
         self.email = email
 
@@ -98,6 +102,19 @@ class Survey(db.Model):
                "outdoor='{self.outdoor}', " \
                "indoor='{self.indoor}', " \
                "user_id='{self.user_id}')".format(self=self)
+
+class Report(db.Model):
+    id = db.Column(db.Integer, primary_key = True)
+    reasonReported = db.Column(db.String(120))
+    report_recipient_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+
+    def __init__(self, reasonReported, report_recipient_id):
+        self.reasonReported = reasonReported
+        self.report_recipient_id = report_recipient_id
+
+    def __repr__(self):
+        return "User(reasonReported ='{self.reasonReported}')".format(self=self)
+
 
 class Message(db.Model):
     id = db.Column(db.Integer, primary_key = True)

@@ -17,6 +17,7 @@ class LoginForm(FlaskForm):
 class RegisterForm(FlaskForm):
     email = StringField('Email', validators=[InputRequired(), Email(message="Invalid email"), Length(max=50)])
     username = StringField('Username', validators=[InputRequired(), Length(min=4, max=15)])
+    studentName = StringField("First/Last Name", validators = [InputRequired()])
     password = PasswordField('Password', validators=[InputRequired(), Length(min=4, max=80)])
 
     def validate_username(self, username):
@@ -69,6 +70,13 @@ class RequestResetForm(FlaskForm):
 class ResetPasswordForm(FlaskForm):
     password = PasswordField('password', validators=[InputRequired(), Length(min=4, max=40)])
     submit = SubmitField('Reset Password')
+
+class ReportForm(FlaskForm):
+    reasons = SelectField(u'Reasons', choices=[('Harrasment', 'Harrasment'),
+                                                ('Illegal Activities', 'Illegal Activities'),
+                                                ('Blackmailing', 'Blackmailing'),
+                                                ('Harmful/Racist messages', 'Harmful/Racist messages'),
+                                                ('Stalking', 'Stalking')])
 
 
 

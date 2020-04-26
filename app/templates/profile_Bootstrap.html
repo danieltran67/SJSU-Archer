@@ -58,25 +58,29 @@
     {% endfor %}
     {% endif %}
     {% endwith %}
-<h1>{{ current_user.username }} </h1>
-  <a href="{{ url_for('surveyUpdate')}}" class="btn btn-primary btn-lg active" role="button" aria-pressed="true">Edit your major or interests</a>
+    <!-- end alert code -->
+<body style = "background-color:Black">
+<font font size="+5" color="#ffc778"><h1><h1>{{ current_user.studentName }} </h1></font>
+  <center><a href="{{ url_for('surveyUpdate')}}" class="btn btn-primary btn-lg active" role="button" aria-pressed="true">Edit your major or interests</a></center>
   <div class = "major">
-    <h1>Major</h1>
-    {{ userMajor }}
+    <center>
+          <font font size="+5" color="#ffc778"><h1>Major</h1></font>
+    <font font size="+2"><p style="color:orange;" style="text-align:center">{{ userMajor }}</p></font>
+    </center>
   </div>
   <div class = "friends">
-    <h1>Friends</h1>
+  <font style ="color:orange;"><h1>Friends</h1></font>
     {% for friend in current_user.friends %}
-    <p>{{ friend.username }}</p>
+    <p>{{ friend.studentName }}</p>
     {% endfor %}
   </div>
   <div class="Interests">
-    <h1>Interests</h1>
-    <p>{{ userOutdoor }}</p>
-    <p>{{ userIndoor }}</p>
+    <font font size="+5" color="#ffc778"><h1 style="text-align:center">Interests</h1></font>
+    <center> <font font size="+2"> <p style="color:orange;" style="text-align:center">{{ userOutdoor }}</p>
+    <font font size="+2"><p style="color:orange;" style="text-align:center">{{ userIndoor }}</p></font></center>
     <div class="form-group">
-     <label for="matchFilter">Match me by...</label>
-     <select class="form-control" id="matchFilter" onchange="location = this.value;">
+     <center><label for="matchFilter">Match me by...</label></center>
+    <center> <select class="form-control" id="matchFilter" onchange="location = this.value;" style="width: 180px;">
        <option value="">Select a filter...</option>
        <option value="{{url_for('majorMatch')}}">Major</option>
        <option value="{{url_for('indoorMatch')}}">Indoor Interests</option>
@@ -84,4 +88,9 @@
      </select>
    </div>
   </div>
+  </body>
+{% endblock %}
+{% block scripts %}
+    {{ super() }}
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.7/angular.min.js"></script>
 {% endblock %}

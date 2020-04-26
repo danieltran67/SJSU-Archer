@@ -35,6 +35,7 @@
             <li><a href="{{ url_for('contact') }}"><font size="+1" color="#ffc778">Contact Us</font></a></li>
         {% else %}
             <li><a href="{{ url_for('user', username = current_user.username) }}"><font size="+1" color="#ffc778">Profile</font></a></li>
+            <li><a href="{{ url_for('chat') }}"><font size="+1" color="#ffc778">Direct Message</font></a></li>
             <li><a href="{{ url_for('about') }}"><font size="+1" color="#ffc778">About Us</font></a></li>
             <li><a href="{{ url_for('contact') }}"><font size="+1" color="#ffc778">Contact</font></a></li>
             <li><a href="{{ url_for('logout') }}"><font size="+1" color="#ffc778">Logout</font></a></li>
@@ -44,20 +45,17 @@
   </div>
  </nav>
     <!--NAVBAR CODE-->
-    <br><br><br><br><br><br>
-<h1>Hello {{ current_user.username }} </h1>
-<div class="form-group">
- <label for="matchFilter">Match me by...</label>
- <select class="form-control" id="matchFilter" onchange="location = this.value;">
-   <option value="">Select a filter...</option>
-   <option value="{{url_for('majorMatch')}}">Major</option>
-   <option value="{{url_for('indoorMatch')}}">Indoor Interests</option>
-   <option value="{{url_for('outdoorMatch')}}">Outdoor Interests</option>
- </select>
-</div>
-<p> These people are in the same major!:
-    {% for matches in foundMatch %}
-  <li> {{ matches.major }}, {{ matches.indoor }}, {{ matches.outdoor }}, <a href="{{ url_for('userProfile', username = matches.person.studentName) }}"> {{ matches.person.username }}</a></li>
-</p>
-{% endfor %}
+
+<!---EMAIL VERIFICANTION CODE -->
+    <div class="container">
+        <form class="form-signin" method="POST" action="">
+                {{ form.hidden_tag() }}
+            <h2 class="form-signin-heading">Reset Password</h2>
+                {{ wtf.form_field(form.password) }}
+                {{ wtf.form_field(form.submit) }}
+        </form>
+
+        <!---EMAIL VERIFICANTION CODE -->
+    </div>
+
 {% endblock %}
