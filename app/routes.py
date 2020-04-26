@@ -238,9 +238,12 @@ def select_task_by_priority(conn, recipient_id,
     cur = conn.cursor()
 
     # Gets all of sender's/receiver's text
-    cur.execute("SELECT sender_id, recipient_id FROM message as one "
-                "INTERSECT "
-                "SELECT recipient_id, sender_id FROM message as two ")
+    cur.execute("SELECT  * FROM message as one "
+                "JOIN user as two "
+                "ON "
+                "((one.sender_id=? AND one.recipient_id=?) "
+                "OR (one.sender_id=? AND one.recipient_id=?))",
+                (sender_id, recipient_id, recipient_id, sender_id,))
 
     rows = cur.fetchall()
 
