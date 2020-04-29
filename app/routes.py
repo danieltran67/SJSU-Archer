@@ -57,22 +57,16 @@ def reset_request():
         return redirect(url_for('homePage'))
     form = RequestResetForm()
     if form.validate_on_submit():
-        user = User.query.filter_by(email=form.email.data).first()
-        if user:
-            send_reset_email(user)
-            flash('An email has been sent to reset your password')
-            return redirect(url_for('login'))
-    return render_template('reset_request.html', title='Reset Password', form=form)
-
-
-def send_reset_email(user):
-    token = user.get_reset_token()
-    body = f"Archer Password Reset Link: " \
-           f"{url_for('reset_token', token=token, _external=True)}"
-    receiver = user.email
-    yag.send(to=receiver,
-             subject="SJSU Archer Reset Password",
-             contents=body)
+        user = User.query.filter_by(email=form.email.data).first() #Checks if user exists
+        question = Survey.query.filter_by(question=form.question.data).first()  # Checks if  question/ans exists
+        answer = Survey.query.filter_by(answer=form.answer.data).first() #Checks if  question/ans exists
+        if user and question and answer:
+            token = user.get_reset_token()
+            flash('Sending you to reset password')
+            return redirect(url_for('reset_token', token=token))
+        else:
+            flash('Incorrect input. Try Again.')
+    return render_template('reset_request.html', title="Password Reset", form=form)
 
 
 # Required for reset_request to match user
@@ -127,7 +121,8 @@ def survey():
     form = SurveyForm()
     if form.validate_on_submit():
         option = Survey(major=form.major.data, outdoor=form.outdoor.data, indoor=form.indoor.data,
-                        user_id=current_user.id)
+                        user_id=current_user.id,
+                        question=form.question.data, answer=form.answer.data)
         db.session.add(option)
         db.session.commit()
 
@@ -310,9 +305,7 @@ def addFriend(username):
     current_user.befriend(user)
     db.session.commit()
     flash('Friend Added!')
-    if user.isFriendsWith(current_user):
-        return redirect(url_for('user', user))
-    return redirect(url_for('userProfile', username=username))
+    return redirect(url_for('user', username=username))
 
 
 @app.route('/profile/majorMatch')

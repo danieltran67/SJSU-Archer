@@ -7,7 +7,6 @@ from flask_script import Manager
 from flask_migrate import Migrate, MigrateCommand
 from flask_bootstrap import Bootstrap
 from flask_login import LoginManager
-from flask_socketio import SocketIO
 
 #initialize app, database, and commands
 

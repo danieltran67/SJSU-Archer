@@ -1,8 +1,5 @@
-from wtforms import StringField, SubmitField, PasswordField
-from wtforms.validators import InputRequired, Email, Length
-
+from sqlalchemy.sql.functions import user
 from app import *
-from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
 from datetime import datetime
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
@@ -16,9 +13,11 @@ class to make data table.
 def load_user(user_id):
     return User.query.get(int(user_id))
 
+
 friendsList = db.Table('friends',
-    db.Column('user_id', db.Integer, db.ForeignKey('user.id'), index = True),
-    db.Column('friend_id', db.Integer, db.ForeignKey('user.id')))
+                       db.Column('user_id', db.Integer, db.ForeignKey('user.id'), index=True),
+                       db.Column('friend_id', db.Integer, db.ForeignKey('user.id')))
+
 
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)  # unique id per user info
@@ -27,17 +26,16 @@ class User(UserMixin, db.Model):
     email = db.Column(db.String(128), index=True, unique=True)
     surveyVisted = db.Column(db.Boolean)
     seenAtTime = db.Column(db.DateTime)
-    optionSurvey = db.relationship('Survey', backref = "person", lazy = 'dynamic')
-    friends = db.relationship('User', secondary = friendsList,
-                            primaryjoin=id==friendsList.c.user_id,
-                            secondaryjoin=id==friendsList.c.friend_id,
-                            backref = db.backref('friendsList', lazy = 'dynamic'),
-                            lazy = 'dynamic')
-    messageSent = db.relationship('Message', foreign_keys = 'Message.sender_id',
-                            backref = 'sender', lazy = 'dynamic')
-    messageRecieved = db.relationship('Message', foreign_keys = 'Message.recipient_id',\
-                            backref = 'reciever', lazy = 'dynamic')
-
+    optionSurvey = db.relationship('Survey', backref="person", lazy='dynamic')
+    friends = db.relationship('User', secondary=friendsList,
+                              primaryjoin=id == friendsList.c.user_id,
+                              secondaryjoin=id == friendsList.c.friend_id,
+                              backref=db.backref('friendsList', lazy='dynamic'),
+                              lazy='dynamic')
+    messageSent = db.relationship('Message', foreign_keys='Message.sender_id',
+                                  backref='sender', lazy='dynamic')
+    messageRecieved = db.relationship('Message', foreign_keys='Message.recipient_id',
+                                      backref='reciever', lazy='dynamic')
 
     def __init__(self, username, password, email):
         self.username = username
@@ -48,6 +46,7 @@ class User(UserMixin, db.Model):
         if friend not in self.friends:
             self.friends.append(friend)
             return self
+
     def unfriend(self, friend):
         if friend in self.friends:
             self.friends.remove(friend)
@@ -62,7 +61,7 @@ class User(UserMixin, db.Model):
 
     def __repr__(self):
         return "User(username='{self.username}', " \
-                "email='{self.email}', " \
+               "email='{self.email}', " \
                "password='{self.password}')".format(self=self)
 
     # Creates a id token that expires in 30 minutes
@@ -80,27 +79,35 @@ class User(UserMixin, db.Model):
             return None
         return User.query.get(user_id)
 
+
 class Survey(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     major = db.Column(db.String(100))
     outdoor = db.Column(db.String(100))
     indoor = db.Column(db.String(100))
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    question = db.Column(db.String(80))
+    answer = db.Column(db.String(80))
 
-    def __init__(self, major, outdoor, indoor, user_id):
+    def __init__(self, major, outdoor, indoor, user_id, question, answer):
         self.major = major
         self.outdoor = outdoor
         self.indoor = indoor
         self.user_id = user_id
+        self.question = question
+        self.answer = answer
 
     def __repr__(self):
         return "User(major='{self.major}', " \
                "outdoor='{self.outdoor}', " \
                "indoor='{self.indoor}', " \
-               "user_id='{self.user_id}')".format(self=self)
+               "user_id='{self.user_id}', " \
+               "question='{self.question}', " \
+               "answer='{self.answer}')".format(self=self)
+
 
 class Message(db.Model):
-    id = db.Column(db.Integer, primary_key = True)
+    id = db.Column(db.Integer, primary_key=True)
     sender_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     recipient_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     body = db.Column(db.String(140))
@@ -114,8 +121,7 @@ class Message(db.Model):
     def __repr__(self):
         return '<Message {}>'.format(self.body)
 
-
 # create database. In case needed to remake database, delete current archer.db
 # and run code below
-#db.create_all()
-#db.session.commit()
+db.create_all()
+db.session.commit()
