@@ -41,7 +41,12 @@
 <h1>Hello {{ current_user.username }} </h1>
 <p> These people are in the same major!:
     {% for matches in foundMatch %}
-  <li>{{ matches.major }}, {{ matches.outdoor }}, {{ matches.indoor }}, {{ matches.user_id }}</li>
+
+        <li>{{ matches.major }},
+            {{ matches.outdoor }},
+            {{ matches.indoor }},
+            {{ matches.user_id }}
+        </li>
 </p>
-{% endfor %}
+    {% endfor %}
 {% endblock %}

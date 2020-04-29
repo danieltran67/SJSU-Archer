@@ -79,30 +79,40 @@ def send_reset_email(user):
 @app.route('/reset_password/<token>', methods=['GET', 'POST'])
 def reset_token(token):
     if current_user.is_authenticated:
+
         return redirect(url_for('homePage'))
     user = User.verify_reset_token(token)
+
     if user is None:  # If the token is wrong or expired
         flash('That is an invalid  or expired token', 'warning')
+
         return redirect(url_for('reset_request'))
+
     form = ResetPasswordForm()
+
     if form.validate_on_submit():
         hashed_password = form.password.data
         user.password = hashed_password
         db.session.commit()
         flash('Your password updated!')
+
         return redirect(url_for('homePage'))
+
     return render_template('reset_token.html', title='Reset Password', form=form)
 
 
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
     form = RegisterForm()
+
     if form.validate_on_submit():
         new_user = User(username=form.username.data, email=form.email.data, password=form.password.data)
         db.session.add(new_user)
         db.session.commit()
         flash('You are now registered!')
+
         return redirect(url_for('login'))
+
     return render_template('signUp_Bootstrap.html', form=form, title="Register")
 
 
@@ -120,6 +130,7 @@ def survey():
                         user_id=current_user.id)
         db.session.add(option)
         db.session.commit()
+
         return redirect(url_for('user', username=current_user.username))
 
     return render_template('surveyBootstrap.html', form=form, title="Survey")
@@ -132,16 +143,22 @@ def surveyUpdate():
         user_id=current_user.id).first()  # finds data connection between survey and user
     form = SurveyUpdateForm()
     if form.validate_on_submit():
+
         if form.major.data:
             personSurvey.major = form.major.data
+
         if form.outdoor.data:
             personSurvey.outdoor = form.outdoor.data
+
         if form.indoor.data:
             personSurvey.indoor = form.indoor.data
+
         Survey(major=form.major.data, outdoor=form.outdoor.data, indoor=form.indoor.data, user_id=current_user.id)
         db.session.commit()
         flash("Activities Updated!")
+
         return redirect(url_for('user', username=current_user.username))
+
     return render_template('updateSurveyBootstrap.html', form=form, title="Update Activities")
 
 
@@ -149,11 +166,13 @@ def surveyUpdate():
 
 @app.route('/about', methods=['GET', 'POST'])
 def about():
+
     return render_template('aboutUs.html', title="About Us")
 
 
 @app.route('/contact', methods=['GET', 'POST'])
 def contact():
+
     return render_template('ContactUs_Bootstrap.html')
 
 
@@ -163,27 +182,41 @@ def contact():
 def user(username):
     user = User.query.filter_by(username=username).first_or_404()
     if user.surveyVisted == 1:
-        personSurvey = Survey.query.filter_by(user_id=current_user.id).first()
+        personSurvey = Survey.query.filter_by(user_id=current_user.id).first() #Gets your own info
+        friendSurvey = Survey.query.filter_by(user_id=user.id).first()    #Gets friend's info
     else:
         return redirect(url_for('survey'))
-    return render_template('profile_Bootstrap.html', userMajor=personSurvey.major, userOutdoor=personSurvey.outdoor,
-                           userIndoor=personSurvey.indoor)
+
+    return render_template('newDashBoard.html',
+                           userMajor=personSurvey.major,
+                           userOutdoor=personSurvey.outdoor,
+                           userIndoor=personSurvey.indoor,
+                           user=user,
+                           current_user=current_user)
 
 
 @app.route('/profile/user_page/<username>') # This is the dashboard
 def userProfile(username):
     user = User.query.filter_by(username=username).first_or_404()
     personSurvey = Survey.query.filter_by(user_id=user.id).first()
-    return render_template('accountProfile_Bootstrap.html', userMajor=personSurvey.major,
-                           userOutdoor=personSurvey.outdoor, userIndoor=personSurvey.indoor, user=user)
+
+    return render_template('accountProfile_Bootstrap.html',
+                           userMajor=personSurvey.major,
+                           userOutdoor=personSurvey.outdoor,
+                           userIndoor=personSurvey.indoor,
+                           user=user)
 
 
 @app.route('/profile/user_page/<username>')
 def friendProfile(username):
     user = User.query.filter_by(username=username).first_or_404()
     personSurvey = Survey.query.filter_by(user_id=user.id).first()
-    return render_template('accountProfile_Bootstrap.html', userMajor=personSurvey.major,
-                           userOutdoor=personSurvey.outdoor, userIndoor=personSurvey.indoor, user=user)
+
+    return render_template('accountProfile_Bootstrap.html',
+                           userMajor=personSurvey.major,
+                           userOutdoor=personSurvey.outdoor,
+                           userIndoor=personSurvey.indoor,
+                           user=user)
 
 
 ### ----PROFILE CODE  END---------------------------------------------------------------------------------------
@@ -269,7 +302,7 @@ def main(receiverCol, senderCol):
 ### ----CHAT CODE  END---------------------------------------------------------------------------------------
 
 
-### ----FREIND CODE ---------------------------------------------------------------------------------------
+### ----MATCH CODE ---------------------------------------------------------------------------------------
 @app.route('/add_friend/<username>')
 @login_required
 def addFriend(username):
@@ -292,7 +325,11 @@ def majorMatch():
     foundMatch = Survey.query.filter_by(major=match.major).all()
     # find corresponding link between user_id and user
 
-    return render_template('majorMatch_Bootstrap.html', title="Your Matches by Major", foundMatch=foundMatch)
+    return render_template('majorMatch_Bootstrap.html',
+                           title="Your Matches by Major",
+                           foundMatch=foundMatch,
+                           match=match,
+                           current_user=current_user)
 
 
 @app.route('/profile/indoorMatch')
@@ -321,7 +358,7 @@ def outdoorMatch():
     return render_template('outdoorMatch_Bootstrap.html', title="Your Matches by Interests", foundMatch=foundMatch)
 
 
-### ----FREIND CODE  END---------------------------------------------------------------------------------------
+### ----MATCH CODE  END---------------------------------------------------------------------------------------
 
 
 @app.route('/logout')

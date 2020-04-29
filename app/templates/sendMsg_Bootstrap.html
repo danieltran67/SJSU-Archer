@@ -23,7 +23,7 @@
     <br>
       <ul class="nav navbar-nav navbar-font">
           <li><a>  >-{{ current_user.username }}-> </a></li>
-          <li><a href="{{ url_for('homePage') }}"><font size="+1" color="#ffc778"> Home </font> </a></li>
+          <!--<li><a href="{{ url_for('homePage') }}"><font size="+1" color="#ffc778"> Home </font> </a></li>-->
         {% if current_user.is_anonymous %}
             <li><a>........</a></li>
             <li><a href="{{ url_for('login') }}"><font size="+1" color="#ffc778">Login</font></a></li>
@@ -46,6 +46,7 @@
     <!--NAVBAR CODE-->
     <br><br><br><br><br><br>
     <br><br><br><br><br><br>
+    <h1>{{ user.username }}</h1>
 <div class='panel-Body scroll' id = chatBody
      style=" position:relative; width: 700px; height: 200px; left:80px; overflow-y: scroll;">
         <!-- Scroll bar present but disabled when less content -->
@@ -59,7 +60,7 @@
 
 </div>
 
-    <h1>{{ ('Sending Message to ') }}{{ user.username }}</h1>
+
     <div class="container">
     <form method = "POST" action="{{ url_for('sendMsg', username = user.username)}}">
         <div class="col-md-4">
